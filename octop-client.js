@@ -56,6 +56,12 @@
       this.token = ''; this.online = false; localStorage.removeItem(STORAGE_TOKEN); this._syncIndicator(); window.dispatchEvent(new CustomEvent('octop-disconnected'));
     },
     listAgents: function () { return this.request('/agents'); },
+    listExperts: function () { return this.request('/experts'); },
+    expert: function (id) { return this.request('/experts/' + encodeURIComponent(id)); },
+    createAgentFromExpert: function (id, body) { return this.request('/agents/from-expert/' + encodeURIComponent(id), { method: 'POST', body: JSON.stringify(body || {}) }); },
+    listExpertHub: function (query) { var qs = query ? '?' + new URLSearchParams(query).toString() : ''; return this.request('/experts/hub' + qs); },
+    expertHub: function (slug) { return this.request('/experts/hub/' + encodeURIComponent(slug)); },
+    installExpertHub: function (slug, body) { return this.request('/experts/hub/' + encodeURIComponent(slug) + '/install', { method: 'POST', body: JSON.stringify(body || {}) }); },
     listSessions: function (id) { return this.request('/agents/' + encodeURIComponent(id) + '/threads'); },
     listCron: function (id) { return this.request('/agents/' + encodeURIComponent(id) + '/cron'); },
     patchCron: function (agentId, cronId, patch) { return this.request('/agents/' + encodeURIComponent(agentId) + '/cron/' + encodeURIComponent(cronId), { method: 'PATCH', body: JSON.stringify(patch) }); },

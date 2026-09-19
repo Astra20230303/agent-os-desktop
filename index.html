@@ -78,6 +78,18 @@ mark{background:color-mix(in srgb,var(--accent) 30%,transparent);color:var(--tx)
 .wb-card>i{width:27px;height:27px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);font-size:15px;flex:none}
 .wb-card b{display:block;font-size:11px;color:var(--tx)}
 .wb-card small{display:block;margin-top:3px;font-size:9px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-side-r{width:304px;background:rgba(18,20,27,.82)}
+.csr-tabs{overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent;flex:none;padding:0 4px}
+.csr-tabs::-webkit-scrollbar{height:4px}.csr-tabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:9px}
+.csr-tabs button{flex:0 0 auto;min-width:58px;padding:12px 8px;font-size:11px;white-space:nowrap}
+.csr-tabs button.cur{font-weight:600;background:rgba(10,132,255,.07)}
+.csr-body{padding:15px 14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 45%)}
+.wb-grid{grid-template-columns:1fr;gap:9px}
+.wb-card{min-height:62px;padding:11px 12px;border-radius:11px;background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.018));border-color:rgba(255,255,255,.13)}
+.wb-card>i{width:34px;height:34px;border-radius:10px;font-size:17px;background:color-mix(in srgb,var(--accent) 17%,rgba(255,255,255,.03))}
+.wb-card b{font-size:12px}.wb-card small{font-size:10px;margin-top:4px}
+.wb-card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(0,0,0,.16)}
+.wb-security{margin-top:14px!important;padding:11px 12px!important;border-radius:10px!important;line-height:1.55!important;background:rgba(48,209,88,.045)!important;border-color:rgba(48,209,88,.18)!important}
 #desktop{position:fixed;inset:34px 0 0 0;overflow:hidden;background:radial-gradient(1100px 520px at 50% 118%,color-mix(in srgb,var(--accent) 7%,transparent),transparent 70%),radial-gradient(circle,rgba(255,255,255,.032) 1px,transparent 1.5px);background-size:auto,28px 28px}
 #desktop.nodots{background:radial-gradient(1100px 520px at 50% 118%,color-mix(in srgb,var(--accent) 7%,transparent),transparent 70%)}
 #desktop-mark{position:absolute;right:-14px;bottom:66px;font-family:var(--num);font-weight:700;font-size:132px;line-height:.92;letter-spacing:-.02em;color:rgba(255,255,255,.026);pointer-events:none;text-align:right}
@@ -327,6 +339,24 @@ input[type=range]{accent-color:var(--accent);width:190px}
 .store-card .au{font-size:10.5px;color:var(--tx3);margin-top:1px}
 .store-card .ds{font-size:11.5px;color:var(--tx2);line-height:1.6;flex:1}
 .store-card .f{display:flex;justify-content:space-between;align-items:center}
+.expert-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px;min-height:430px}
+.expert-list{border-right:1px solid var(--line);padding-right:12px;overflow:auto;max-height:520px}
+.expert-item{display:flex;gap:9px;align-items:center;width:100%;text-align:left;padding:9px;border:1px solid transparent;border-radius:10px;color:var(--tx2);margin-bottom:4px}
+.expert-item:hover,.expert-item.active{background:rgba(255,255,255,.06);border-color:var(--line2);color:var(--tx)}
+.expert-item i{width:29px;height:29px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:color-mix(in srgb,var(--ec) 20%,transparent);color:var(--ec);font-size:16px;flex:none}
+.expert-item b{display:block;font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.expert-item small{display:block;color:var(--tx3);font-size:9.5px;margin-top:2px}
+.expert-detail{min-width:0;padding:3px 4px 0}
+.expert-hero{display:flex;gap:13px;align-items:center;margin-bottom:14px}
+.expert-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--ec);background:color-mix(in srgb,var(--ec) 18%,#11151d);border:1px solid color-mix(in srgb,var(--ec) 40%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.expert-hero h3{font-size:17px;margin:0;color:var(--tx)}
+.expert-hero p{font-size:11px;color:var(--tx2);margin:4px 0 0;line-height:1.5}
+.expert-section{border-top:1px solid var(--line);padding:11px 0}
+.expert-section h4{font-size:10px;color:var(--tx3);font-weight:500;letter-spacing:.08em;margin:0 0 7px;text-transform:uppercase}
+.expert-chip{display:inline-flex;align-items:center;padding:4px 7px;border:1px solid var(--line);border-radius:999px;font-size:10px;color:var(--tx2);margin:0 4px 4px 0;background:rgba(255,255,255,.025)}
+.expert-prompt{display:flex;gap:7px;align-items:flex-start;padding:7px 8px;border:1px solid var(--line);border-radius:8px;margin-bottom:5px;color:var(--tx2);font-size:10.5px;line-height:1.45}
+.expert-prompt i{color:var(--accent);margin-top:2px}
+@media(max-width:720px){.expert-shell{grid-template-columns:1fr}.expert-list{border-right:0;border-bottom:1px solid var(--line);padding:0 0 10px;max-height:180px;display:flex;gap:5px;overflow-x:auto}.expert-item{min-width:170px}}
 .dl{font-size:10.5px;color:var(--tx3);font-family:var(--mono)}
 .mem-win{display:flex;flex:1;min-height:0}
 .mem-nav{width:206px;border-right:1px solid var(--line);overflow-y:auto;padding:8px;background:rgba(13,16,22,.5);flex:none}
@@ -664,6 +694,7 @@ input[type=range]{accent-color:var(--accent);width:190px}
       <button id="tb-set" title="系统设置"><i class="ri-settings-3-line"></i></button>
       <button id="tb-mem" title="记忆库管理"><i class="ri-brain-line"></i></button>
       <button id="tb-store" title="Agent Hub 生态市场"><i class="ri-store-2-line"></i></button>
+      <button id="tb-experts" title="专家中心"><i class="ri-user-star-line"></i></button>
       <button id="tb-cap" title="Agent 能力中心"><i class="ri-flashlight-line"></i></button>
       <button id="tb-tasks" title="Agent 任务中心"><i class="ri-task-line"></i></button>
       <button id="tb-notify" title="Agent 通知"><i class="ri-notification-3-line"></i><span class="notify-badge">0</span></button>
@@ -856,6 +887,47 @@ async function openTaskCenter(){
   mo.body.querySelector('#cron-refresh').onclick=load;mo.foot.append(el('<button class="btn">关闭</button>'));mo.foot.querySelector('button').onclick=mo.close;load();
 }
 $('#tb-tasks').onclick=function(e){e.stopPropagation();openTaskCenter()};
+async function openExpertCenter(){
+  if(!window.OCTOP||!OCTOP.token){toast('info','请先连接 Octop','专家中心需要读取远程专家模板');OCTOP&&OCTOP.requestLogin();return}
+  var mo=openModal({title:'专家中心 · Octop',width:920});
+  mo.body.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><div style="font-size:12px;color:var(--tx2)"><i class="ri-user-star-line" style="color:var(--accent)"></i> 从 Octop 专家模板创建可运行的 Desktop Agent</div><button class="btn" id="expert-refresh" style="margin-left:auto;padding:5px 9px"><i class="ri-refresh-line"></i>刷新</button></div><div class="expert-shell"><div class="expert-list" id="expert-list"><div style="padding:25px;text-align:center;color:var(--tx3)"><i class="ri-loader-4-line spin"></i></div></div><div class="expert-detail" id="expert-detail"><div style="padding:70px 20px;text-align:center;color:var(--tx3)"><i class="ri-sparkling-2-line" style="font-size:30px;display:block;margin-bottom:10px"></i>选择一个专家模板查看详情</div></div></div>';
+  mo.foot.append(el('<button class="btn">关闭</button>'));mo.foot.querySelector('button').onclick=mo.close;
+  var list=mo.body.querySelector('#expert-list'),detail=mo.body.querySelector('#expert-detail'),experts=[],selected=null;
+  function text(v){if(v&&typeof v==='object')return v.zh||v.en||'';return v||''}
+  function iconFor(x){return /^ri-/.test(x&&x.icon_name||'')?x.icon_name:'ri-sparkling-2-line'}
+  function renderList(){list.innerHTML=experts.length?experts.map(function(x){return '<button class="expert-item '+(selected&&selected.id===x.id?'active':'')+'" data-expert="'+esc(x.id)+'" style="--ec:'+(x.color||'#6fc9ff')+'"><i class="'+iconFor(x)+'"></i><span style="min-width:0"><b>'+esc(text(x.label)||x.id)+'</b><small>'+esc(text(x.description)||'Octop 专家模板')+'</small></span></button>'}).join(''):'<div style="padding:45px 15px;text-align:center;color:var(--tx3)"><i class="ri-inbox-line" style="font-size:27px;display:block;margin-bottom:8px"></i>暂无可用专家模板</div>';list.querySelectorAll('[data-expert]').forEach(function(b){b.onclick=function(){selected=experts.find(function(x){return x.id===b.dataset.expert});renderList();loadDetail(selected)}})}
+  function renderPrompts(rows){return rows&&rows.length?rows.map(function(p){return '<div class="expert-prompt"><i class="'+esc(p.icon_name||'ri-sparkling-line')+'"></i><span><b>'+esc(text(p.title)||'快速开始')+'</b><span style="display:block;color:var(--tx3);margin-top:2px">'+esc(text(p.description)||text(p.prompt))+'</span></span></div>'}).join(''):'<span style="color:var(--tx3);font-size:10.5px">暂无预置快速指令</span>'}
+  async function loadDetail(x){
+    if(!x)return;detail.innerHTML='<div style="padding:65px;text-align:center;color:var(--tx3)"><i class="ri-loader-4-line spin"></i> 正在读取专家详情…</div>';
+    try{x=await OCTOP.expert(x.id);selected=x;renderList();var name=text(x.label)||x.id,desc=text(x.description)||'Octop 专家模板';var prompts=x.quick_prompts||[];detail.innerHTML='<div class="expert-hero" style="--ec:'+(x.color||'#6fc9ff')+'"><span class="expert-icon"><i class="'+iconFor(x)+'"></i></span><span style="min-width:0"><h3>'+esc(name)+'</h3><p>'+esc(desc)+'</p></span><button class="btn pri" id="expert-create" style="margin-left:auto;flex:none"><i class="ri-add-line"></i>创建专家</button></div><div class="expert-section"><h4>快速开始</h4>'+renderPrompts(prompts)+'</div><div class="expert-section"><h4>模板文件</h4><div style="color:var(--tx2);font-size:11px;line-height:1.6">'+esc((x.files||x.prompt_files||[]).join(' · ')||'身份、系统提示词和工作流配置由 Octop 管理')+'</div></div><div class="expert-section"><h4>创建说明</h4><div style="font-size:11px;color:var(--tx3);line-height:1.6"><i class="ri-shield-check-line" style="color:var(--ok)"></i> 创建后会自动生成 Desktop Agent，并继承 Octop 的技能、工具权限和轨迹配置。</div></div>';detail.querySelector('#expert-create').onclick=function(){createFromExpert(x)}}catch(e){detail.innerHTML='<div style="padding:35px;text-align:center;color:var(--err)"><i class="ri-error-warning-line"></i> '+esc(e.message||'专家详情读取失败')+'</div>'}}
+  async function createFromExpert(x){
+    var name=text(x.label)||x.id,form=openModal({title:'创建专家 · '+name,width:500});
+    form.body.innerHTML='<div style="font-size:11px;color:var(--tx2);line-height:1.6;margin-bottom:12px">Octop 将根据该模板创建一个可运行的 Agent。专家图标、技能和系统配置由后端继承。</div><label class="field"><span>桌面名称</span><input id="expert-name" value="'+esc(name)+'" maxlength="64"></label><label class="field"><span>描述（可选）</span><textarea id="expert-desc" style="height:70px;resize:vertical" maxlength="300">'+esc(text(x.description))+'</textarea><div id="expert-create-error" style="color:var(--err);font-size:11px;min-height:18px;margin-top:6px"></div>';
+    form.foot.append(el('<button class="btn">取消</button>'),el('<button class="btn pri"><i class="ri-sparkling-2-line"></i>创建并打开</button>'));form.foot.querySelector('.btn').onclick=form.close;form.foot.querySelector('.btn.pri').onclick=async function(){var btn=this,n=form.body.querySelector('#expert-name').value.trim(),d=form.body.querySelector('#expert-desc').value.trim(),err=form.body.querySelector('#expert-create-error');if(!n){err.textContent='请输入专家名称';return}btn.disabled=true;btn.textContent='创建中…';try{var result=await OCTOP.createAgentFromExpert(x.id,{name:n,description:d,enable_trajectory:true});form.close();mo.close();toast('success','专家已创建',n+' · 正在同步到桌面');await syncOctopAgents();startOctopStatusPolling();var rid=String(result&& (result.agent_id||result.id)||'');var p=S.procs.find(function(q){return q.remote&&q.octopId===rid});if(p){launchProc(p);toast('success','工作台已打开',n+' 已就绪')}else toast('info','专家已创建','刷新桌面后即可使用') }catch(e){err.textContent=e.message||'创建失败';btn.disabled=false;btn.innerHTML='<i class="ri-sparkling-2-line"></i>创建并打开'}};
+  }
+  mo.body.querySelector('#expert-refresh').onclick=load;async function load(){list.innerHTML='<div style="padding:25px;text-align:center;color:var(--tx3)"><i class="ri-loader-4-line spin"></i> 正在读取专家模板…</div>';try{experts=await OCTOP.listExperts()||[];selected=experts[0]||null;renderList();if(selected)loadDetail(selected)}catch(e){list.innerHTML='<div style="padding:30px;text-align:center;color:var(--err)">'+esc(e.message||'专家列表读取失败')+'</div>';detail.innerHTML=''}}load();
+}
+$('#tb-experts').onclick=function(e){e.stopPropagation();openExpertCenter()};
+/* Phase 2: unified expert center with installed agents and market templates. */
+openExpertCenter=async function(){
+  if(!window.OCTOP||!OCTOP.token){toast('info','请先连接 Octop','专家中心需要读取远程专家与已创建 Agent');OCTOP&&OCTOP.requestLogin();return}
+  var mo=openModal({title:'专家中心 · Octop',width:980});
+  mo.body.innerHTML='<div class="csr-tabs" style="margin-bottom:12px;border:1px solid var(--line);border-radius:9px;display:flex"><button class="cur" data-ex-tab="mine"><i class="ri-apps-2-line"></i>我的专家</button><button data-ex-tab="builtin"><i class="ri-stack-line"></i>内置模板</button><button data-ex-tab="market"><i class="ri-store-2-line"></i>专家市场</button><button class="btn" id="expert-refresh" style="margin:3px 3px 3px auto;padding:4px 9px;border:0"><i class="ri-refresh-line"></i></button></div><div class="expert-shell"><div class="expert-list" id="expert-list"></div><div class="expert-detail" id="expert-detail"></div></div>';
+  mo.foot.append(el('<button class="btn">关闭</button>'));mo.foot.querySelector('button').onclick=mo.close;
+  var list=mo.body.querySelector('#expert-list'),detail=mo.body.querySelector('#expert-detail'),tab='mine',items=[],selected=null;
+  function text(v){if(v&&typeof v==='object')return v.zh||v.en||'';return v||''}
+  function iconFor(x){return /^ri-/.test(x&&((x.icon_name||x.icon)||''))?x.icon_name||x.icon:'ri-sparkling-2-line'}
+  function nameOf(x){return x.name||text(x.label)||x.agent_id||x.id||'未命名专家'}
+  function descOf(x){var value=x&&x.description;return text(value)||text(x&&x.label_description)||'Octop 专家'}
+  function renderSelected(){if(!selected)return;tab==='mine'?renderMine(selected):renderTemplate(selected,tab==='market')}
+  function renderList(){list.innerHTML=items.length?items.map(function(x,i){var active=selected&&String((selected.agent_id||selected.id||selected.slug))===String((x.agent_id||x.id||x.slug));var color=x.color||'#6fc9ff';var state=x.state||x.last_state||'';return '<button class="expert-item '+(active?'active':'')+'" data-ex-index="'+i+'" style="--ec:'+color+'"><i class="'+iconFor(x)+'"></i><span style="min-width:0;flex:1"><b>'+esc(nameOf(x))+'</b><small>'+esc(tab==='mine'?(state==='running'||state==='active'?'运行中':'已停止'):(x.scene||'专家模板'))+'</small></span></button>'}).join(''):'<div style="padding:45px 15px;text-align:center;color:var(--tx3)"><i class="ri-inbox-line" style="font-size:27px;display:block;margin-bottom:8px"></i>'+({mine:'还没有创建专家',builtin:'暂无内置专家模板',market:'暂无市场专家'}[tab]||'暂无内容')+'</div>';list.querySelectorAll('[data-ex-index]').forEach(function(b){b.onclick=function(){selected=items[+b.dataset.exIndex];renderList();renderSelected()}})}
+  function promptHtml(rows){return rows&&rows.length?rows.slice(0,4).map(function(p){return '<div class="expert-prompt"><i class="'+esc(p.icon_name||'ri-sparkling-line')+'"></i><span><b>'+esc(text(p.title)||'快速指令')+'</b><span style="display:block;color:var(--tx3);margin-top:2px">'+esc(text(p.description)||text(p.prompt))+'</span></span></div>'}).join(''):'<span style="color:var(--tx3);font-size:10.5px">暂无预置快速指令</span>'}
+  function renderMine(x){var id=x.agent_id||x.id,state=x.state||x.last_state||'unknown';detail.innerHTML='<div class="expert-hero" style="--ec:'+(x.color||'#6fc9ff')+'"><span class="expert-icon"><i class="'+iconFor(x)+'"></i></span><span style="min-width:0"><h3>'+esc(nameOf(x))+'</h3><p>'+esc(descOf(x)||'由 Octop 管理的桌面专家')+'</p></span><span class="badge '+(state==='running'||state==='active'?'run':'')+'" style="margin-left:auto">'+esc(state==='running'||state==='active'?'运行中':'已停止')+'</span></div><div class="expert-section"><h4>运行信息</h4><div class="kv"><span class="k">Agent ID</span><span class="v mono">'+esc(id)+'</span></div><div class="kv"><span class="k">模型</span><span class="v">'+esc(x.default_model||'Octop Runtime')+'</span></div><div class="kv"><span class="k">技能</span><span class="v">'+esc(String((x.skill_package_ids||[]).length))+' 项</span></div></div><div class="expert-section" style="display:flex;gap:7px"><button class="btn pri" id="mine-open"><i class="ri-chat-3-line"></i>打开工作台</button><button class="btn" id="mine-toggle">'+(state==='running'||state==='active'?'停止专家':'启动专家')+'</button></div>';detail.querySelector('#mine-open').onclick=function(){var p=S.procs.find(function(q){return q.remote&&q.octopId===String(id)});if(p){mo.close();launchProc(p)}};detail.querySelector('#mine-toggle').onclick=async function(){var b=this;b.disabled=true;try{if(state==='running'||state==='active')await OCTOP.stopAgent(id);else await OCTOP.startAgent(id);toast('success','专家状态已更新',nameOf(x));await load()}catch(e){toast('error','专家状态更新失败',e.message);b.disabled=false}}}
+  function renderTemplate(x,market){var title=nameOf(x),desc=descOf(x);detail.innerHTML='<div class="expert-hero" style="--ec:'+(x.color||'#6fc9ff')+'"><span class="expert-icon"><i class="'+iconFor(x)+'"></i></span><span style="min-width:0"><h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p></span><button class="btn pri" id="expert-install" style="margin-left:auto;flex:none"><i class="ri-add-line"></i>'+(market?'安装专家':'创建专家')+'</button></div><div class="expert-section"><h4>快速开始</h4>'+promptHtml(x.quick_prompts)+'</div><div class="expert-section"><h4>能力摘要</h4><div style="font-size:11px;color:var(--tx2);line-height:1.6">'+esc((x.skill_slugs&&x.skill_slugs.length?(x.skill_slugs.length+' 项技能 · '):'')+(x.scene||'由 Octop 管理模板'))+'</div></div><div class="expert-section"><h4>安全边界</h4><div style="font-size:11px;color:var(--tx3);line-height:1.6"><i class="ri-shield-check-line" style="color:var(--ok)"></i> Provider、API Key、工具权限和工作区仍由 Octop 管理。</div></div>';detail.querySelector('#expert-install').onclick=function(){openInstall(x,market)}}
+  function openInstall(x,market){var title=nameOf(x),form=openModal({title:(market?'安装':'创建')+'专家 · '+title,width:500});form.body.innerHTML='<div style="font-size:11px;color:var(--tx2);line-height:1.6;margin-bottom:12px">'+(market?'将市场模板安装为你的私有 Octop Agent。':'将内置模板创建为可运行的 Desktop Agent。')+'</div><label class="field"><span>桌面名称</span><input id="expert-name" value="'+esc(title)+'" maxlength="64"></label><label class="field"><span>描述（可选）</span><textarea id="expert-desc" style="height:70px;resize:vertical" maxlength="300">'+esc(x.description||'')+'</textarea><div id="expert-create-error" style="color:var(--err);font-size:11px;min-height:18px;margin-top:6px"></div>';form.foot.append(el('<button class="btn">取消</button>'),el('<button class="btn pri"><i class="ri-sparkling-2-line"></i>'+(market?'安装并打开':'创建并打开')+'</button>'));form.foot.querySelector('.btn').onclick=form.close;form.foot.querySelector('.btn.pri').onclick=async function(){var btn=this,n=form.body.querySelector('#expert-name').value.trim(),d=form.body.querySelector('#expert-desc').value.trim(),err=form.body.querySelector('#expert-create-error');if(!n){err.textContent='请输入专家名称';return}btn.disabled=true;btn.textContent=market?'安装中…':'创建中…';try{var result=market?await OCTOP.installExpertHub(x.slug||x.id,{name:n,description:d,enable_trajectory:true}):await OCTOP.createAgentFromExpert(x.id,{name:n,description:d,enable_trajectory:true});form.close();mo.close();toast('success',market?'专家已安装':'专家已创建',n+' · 正在同步到桌面');await syncOctopAgents();startOctopStatusPolling();var rid=String(result&&(result.agent_id||result.id)||''),p=S.procs.find(function(q){return q.remote&&q.octopId===rid});if(p)launchProc(p);else toast('info','专家已就绪','刷新桌面后即可使用')}catch(e){err.textContent=e.message||'操作失败';btn.disabled=false;btn.innerHTML='<i class="ri-sparkling-2-line"></i>'+(market?'安装并打开':'创建并打开')}}}
+  async function load(){list.innerHTML='<div style="padding:25px;text-align:center;color:var(--tx3)"><i class="ri-loader-4-line spin"></i> 正在读取…</div>';detail.innerHTML='';try{if(tab==='mine'){items=await OCTOP.listAgents()||[]}else if(tab==='builtin'){items=await OCTOP.listExperts()||[]}else{var result=await OCTOP.listExpertHub({});items=result&&result.items||[]}selected=items[0]||null;renderList();if(selected){if(tab==='mine')renderMine(selected);else renderTemplate(selected,tab==='market')}}catch(e){list.innerHTML='<div style="padding:30px;text-align:center;color:var(--err)">'+esc(e.message||'读取失败')+'</div>';detail.innerHTML=''}}
+  mo.body.querySelector('.csr-tabs').onclick=function(e){var b=e.target.closest('[data-ex-tab]');if(!b)return;tab=b.dataset.exTab;Array.prototype.forEach.call(mo.body.querySelectorAll('[data-ex-tab]'),function(x){x.classList.toggle('cur',x===b)});load()};mo.body.querySelector('#expert-refresh').onclick=load;load();
+};
 async function openCapabilityCenter(){
   if(!window.OCTOP||!OCTOP.token){toast('info','请先连接 Octop','能力中心需要读取远程 Agent 配置');OCTOP&&OCTOP.requestLogin();return}
   var mo=openModal({title:'Agent 能力中心',width:720});
@@ -1191,7 +1263,8 @@ function syncOctopAgents(){
     var agents=remote.map(function(a,i){
       var rid=String(a.agent_id||a.id||i), state=a.state==='active'?'running':(a.state||'running');
       if(['running','sleeping','stopped','error'].indexOf(state)<0)state='running';
-      return {id:'octop-'+rid,octopId:rid,remote:true,key:'octop-'+rid,name:a.name||a.agent_id||('Octop Agent '+(i+1)),desc:a.description||'由 Octop 后端托管的智能体',icon:/^ri-/.test(a.icon||'')?a.icon:'ri-sparkling-2-line',color:palette[i%palette.length],type:'Octop Agent',model:a.default_model||'Octop Runtime',maxInst:6,status:state,cpuBase:0,memB:0,cpu:0,mem:0,instances:[],pid:a.pid||'Octop',uptime:0,unreadCount:a.unread_count||0};
+      var remoteIcon=a.icon_name||a.icon||'';
+      return {id:'octop-'+rid,octopId:rid,remote:true,key:'octop-'+rid,name:a.name||a.agent_id||('Octop Agent '+(i+1)),desc:a.description||'由 Octop 后端托管的智能体',icon:/^ri-/.test(remoteIcon)?remoteIcon:'ri-sparkling-2-line',color:a.color||palette[i%palette.length],type:'Octop Agent',model:a.default_model||'Octop Runtime',maxInst:6,status:state,cpuBase:0,memB:0,cpu:0,mem:0,instances:[],pid:a.pid||'Octop',uptime:0,unreadCount:a.unread_count||0,expertId:a.template_name||a.expert_id||''};
     });
     S.procs=SYS_APPS.map(function(s,i){var p={};for(var k in s)p[k]=s[k];p.id='sys'+i;p.pid=PID+=~~rnd(8,40);p.uptime=~~rnd(86400,86400*30);p.cpu=s.cpuBase;p.mem=s.memB;p.instances=[];p.errNote=null;return p}).concat(agents);
     renderIcons();renderPins();updateDockTabs();updStatusbar();
@@ -1871,7 +1944,7 @@ function buildChat(w){
   }
   function renderWorkbenchPanel(){
     var remote=p.remote&&window.OCTOP&&OCTOP.token;
-    csr.innerHTML='<div style="font-size:11px;color:var(--tx2);line-height:1.5;margin-bottom:10px"><i class="ri-layout-grid-line" style="color:var(--accent)"></i> '+(remote?'远程 Agent 工作台':'本地 Agent 工作台')+'<span style="display:block;color:var(--tx3);font-size:10px;margin-top:3px">把对话、执行过程和工作资源集中在一个窗口。</span></div><div class="wb-grid"><button class="wb-card" data-wb="param"><i class="ri-bar-chart-2-line"></i><span><b>对话与参数</b><small>'+esc(p.model||'Agent Runtime')+'</small></span></button><button class="wb-card" data-wb="trajectory"><i class="ri-pulse-line"></i><span><b>执行轨迹</b><small>工具调用 · 任务步骤</small></span></button><button class="wb-card" data-wb="workspace"><i class="ri-folder-2-line"></i><span><b>工作区</b><small>文件浏览 · 编辑 · 上传</small></span></button><button class="wb-card" data-wb="terminal"><i class="ri-terminal-box-line"></i><span><b>安全终端</b><small>需要手动连接</small></span></button><button class="wb-card" data-wb="browser"><i class="ri-global-line"></i><span><b>Remote Browser</b><small>画面 · 标签页 · 接管</small></span></button><button class="wb-card" data-wb="mem"><i class="ri-brain-line"></i><span><b>记忆</b><small>Agent 长期上下文</small></span></button></div><div style="margin-top:12px;padding:9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.02);font-size:10px;color:var(--tx3)"><i class="ri-shield-check-line" style="color:var(--ok)"></i> 工具权限、浏览器接管和终端连接都由 Octop 权限与用户操作控制。</div>';
+    csr.innerHTML='<div style="font-size:11px;color:var(--tx2);line-height:1.5;margin-bottom:12px"><i class="ri-layout-grid-line" style="color:var(--accent)"></i> '+(remote?'远程 Agent 工作台':'本地 Agent 工作台')+'<span style="display:block;color:var(--tx3);font-size:10px;margin-top:4px">把对话、执行过程和工作资源集中在一个窗口。</span></div><div class="wb-grid"><button class="wb-card" data-wb="param"><i class="ri-bar-chart-2-line"></i><span><b>对话与参数</b><small>'+esc(p.model||'Agent Runtime')+'</small></span></button><button class="wb-card" data-wb="trajectory"><i class="ri-pulse-line"></i><span><b>执行轨迹</b><small>工具调用 · 任务步骤</small></span></button><button class="wb-card" data-wb="workspace"><i class="ri-folder-2-line"></i><span><b>工作区</b><small>文件浏览 · 编辑 · 上传</small></span></button><button class="wb-card" data-wb="terminal"><i class="ri-terminal-box-line"></i><span><b>安全终端</b><small>需要手动连接</small></span></button><button class="wb-card" data-wb="browser"><i class="ri-global-line"></i><span><b>Remote Browser</b><small>画面 · 标签页 · 接管</small></span></button><button class="wb-card" data-wb="mem"><i class="ri-brain-line"></i><span><b>记忆</b><small>Agent 长期上下文</small></span></button></div><div class="wb-security" style="margin-top:12px;padding:9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.02);font-size:10px;color:var(--tx3)"><i class="ri-shield-check-line" style="color:var(--ok)"></i> 工具权限、浏览器接管和终端连接都由 Octop 权限与用户操作控制。</div>';
     csr.querySelectorAll('.wb-card').forEach(function(btn){btn.onclick=function(){var target=btn.dataset.wb;var tab=w.el.querySelector('.csr-tabs button[data-t="'+target+'"]');if(tab)tab.click()}})
   }
   function renderWorkspacePanel(){
@@ -1940,6 +2013,7 @@ document.addEventListener('click',function(){if(ctxEl){closeMenu();openMenuBtn=n
 bindDropdown($('#mb-logo'),function(){return[
   {l:'关于 Agent OS',i:'ri-information-line',a:function(){try{openSettings('about')}catch(e){}}},
   {l:'Agent Hub 生态市场',i:'ri-store-2-line',a:function(){try{openHub()}catch(e){toast('warn','Agent Hub 未加载','')}}},
+  {l:'专家中心',i:'ri-user-star-line',a:function(){try{openExpertCenter()}catch(e){toast('warn','专家中心未加载','')}}},
   {l:'Agent Studio 开发工作台',i:'ri-shape-2-line',a:function(){try{openStudio()}catch(e){toast('warn','生态模块未加载','')}}},
   {l:'系统助手 AURA',i:'ri-user-voice-line',a:function(){try{avaForm('mini')}catch(e){toast('warn','助手模块未加载','')}}},
   {l:'Agent Computer 控制台',i:'ri-dashboard-3-line',a:function(){try{openConsole('overview')}catch(e){}}},'-',
@@ -2558,7 +2632,8 @@ function avaRoute(t){
   if(/打开|进入|启动|看看|调出|安装/.test(t)){
     var appMap=[
       [/studio|工作台|开发台|开发工作台/i,'openStudio','Agent Studio 开发工作台'],
-      [/builder|workforce|专家|搭建器/i,'openBuilder','Workforce Builder'],
+      [/专家中心|专家模板|专家市场/i,'openExpertCenter','专家中心'],
+      [/builder|workforce|搭建器/i,'openBuilder','Workforce Builder'],
       [/hub|市场|生态|商店|skill|plugin|mcp/i,'openHub','Agent Hub 生态市场'],
       [/设置/,'openSettings','系统设置'],
       [/记忆库/,'openMemory','记忆库'],
@@ -3681,7 +3756,16 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lights{gap:8px}.lights i{width:13px;height:13px}
 .win-title{font-size:13px;color:#c7c8cf}.win-title b{font-weight:600;color:#f5f5f7}
 .chat-side-l,.chat-side-r{background:rgba(24,25,31,.62)}
-.chat-side-l{width:210px}.chat-side-r{width:248px}
+.chat-side-l{width:210px}.chat-side-r{width:304px;background:rgba(18,20,27,.82)}
+.chat-side-r .csr-tabs{overflow:visible;flex-wrap:wrap;padding:3px 4px;background:rgba(255,255,255,.018)}
+.chat-side-r .csr-tabs button{flex:1 0 25%;min-width:25%;padding:10px 5px;font-size:11px;white-space:nowrap}
+.chat-side-r .csr-body{padding:15px 14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 45%)}
+.chat-side-r .wb-grid{grid-template-columns:1fr;gap:9px}
+.chat-side-r .wb-card{min-height:62px;padding:11px 12px;border-radius:11px;background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.018));border-color:rgba(255,255,255,.13)}
+.chat-side-r .wb-card>i{width:34px;height:34px;border-radius:10px;font-size:17px}
+.chat-side-r .wb-card b{font-size:12px}.chat-side-r .wb-card small{font-size:10px;margin-top:4px}
+.chat-side-r .wb-security{margin-top:14px!important;padding:11px 12px!important;border-radius:10px!important;line-height:1.55!important;background:rgba(48,209,88,.045)!important;border-color:rgba(48,209,88,.18)!important}
+.lights{display:none}
 .csl-sec{padding:13px 14px 6px}.inst-row,.conv{border-radius:8px}
 .inst-row.cur{background:rgba(10,132,255,.18);color:#fff}.conv.cur{background:rgba(255,255,255,.10);border-left-color:var(--accent)}
 .ctabs{padding:8px 16px 0}.ctabs button{padding:9px 13px}.ctabs button.cur{border-color:var(--accent)}
@@ -3691,7 +3775,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .ci-box:focus-within{border-color:rgba(10,132,255,.75);box-shadow:0 0 0 3px rgba(10,132,255,.12)}
 .ci-send{background:var(--accent);color:#fff}
 .btn{border-radius:8px}
-@media (max-width:1100px){#mb-search{width:220px}.chat-side-r{width:210px}.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:1100px){#mb-search{width:220px}.chat-side-r{width:276px}.kpis{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:900px){
   #mb-search{display:none}
   #mb-status{margin-left:6px;gap:7px}

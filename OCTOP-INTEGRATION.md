@@ -37,6 +37,10 @@ const socket = new WebSocket(OCTOP.chatUrl(agents[0].id))
 | AgentOS Desktop | Octop API |
 | --- | --- |
 | 桌面 Agent 列表 | `GET /api/agents` |
+| 内置专家模板 | `GET /api/experts` / `GET /api/experts/{expert_id}` |
+| 从专家模板创建 Agent | `POST /api/agents/from-expert/{expert_id}` |
+| 专家市场 | `GET /api/experts/hub` / `GET /api/experts/hub/{slug}` |
+| 安装市场专家 | `POST /api/experts/hub/{slug}/install` |
 | 进程状态 | `GET /api/agents/{id}/status` |
 | Agent 工作窗口欢迎语 | `GET /api/agents/{id}/chat/welcome`（读取 `welcome_message`） |
 | 会话列表 / 新建会话 | `GET/POST /api/agents/{id}/threads` |
