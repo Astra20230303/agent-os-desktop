@@ -54,6 +54,30 @@ mark{background:color-mix(in srgb,var(--accent) 30%,transparent);color:var(--tx)
 #mb-status b{font-weight:500;color:var(--tx)}
 #st-net{color:var(--ok)}
 #st-net i{color:var(--ok);margin:0}
+#tb-notify{position:relative}
+#tb-notify .notify-badge{position:absolute;right:2px;top:2px;min-width:13px;height:13px;padding:0 3px;border-radius:8px;background:var(--err);color:#fff;font:700 8px/13px var(--mono);text-align:center;display:none}
+#tb-notify.has-unread .notify-badge{display:block}
+#notify-panel{position:fixed;right:12px;top:42px;width:360px;max-width:calc(100vw - 24px);max-height:min(560px,calc(100vh - 58px));z-index:9100;display:flex;flex-direction:column;background:rgba(20,23,31,.96);border:1px solid var(--line2);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.08);backdrop-filter:blur(24px) saturate(1.4);overflow:hidden}
+#notify-panel .np-head{display:flex;align-items:center;gap:8px;padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px}
+#notify-panel .np-head b{font-size:13px}
+#notify-panel .np-head .np-clear{margin-left:auto;color:var(--accent);font-size:10.5px;padding:4px 6px;border-radius:6px}
+#notify-panel .np-head .np-clear:hover{background:rgba(255,255,255,.08)}
+#notify-panel .np-list{overflow-y:auto;padding:7px}
+#notify-panel .np-empty{padding:36px 15px;text-align:center;color:var(--tx3);font-size:12px}
+#notify-panel .np-item{display:flex;gap:10px;padding:10px 9px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+#notify-panel .np-item:hover{background:rgba(255,255,255,.06);border-color:var(--line)}
+#notify-panel .np-item.unread{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+#notify-panel .np-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:color-mix(in srgb,var(--accent) 17%,transparent);color:var(--accent);font-size:14px;flex:none}
+#notify-panel .np-copy{min-width:0;flex:1}
+#notify-panel .np-title{font-size:12px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#notify-panel .np-msg{font-size:11px;line-height:1.5;color:var(--tx2);margin-top:3px;white-space:pre-wrap;word-break:break-word}
+#notify-panel .np-time{font-size:9.5px;color:var(--tx3);margin-top:5px;font-family:var(--mono)}
+.wb-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.wb-card{display:flex;align-items:center;gap:8px;text-align:left;padding:9px 8px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025);color:var(--tx2);cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.wb-card:hover{background:color-mix(in srgb,var(--accent) 9%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,var(--line));transform:translateY(-1px)}
+.wb-card>i{width:27px;height:27px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);font-size:15px;flex:none}
+.wb-card b{display:block;font-size:11px;color:var(--tx)}
+.wb-card small{display:block;margin-top:3px;font-size:9px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #desktop{position:fixed;inset:34px 0 0 0;overflow:hidden;background:radial-gradient(1100px 520px at 50% 118%,color-mix(in srgb,var(--accent) 7%,transparent),transparent 70%),radial-gradient(circle,rgba(255,255,255,.032) 1px,transparent 1.5px);background-size:auto,28px 28px}
 #desktop.nodots{background:radial-gradient(1100px 520px at 50% 118%,color-mix(in srgb,var(--accent) 7%,transparent),transparent 70%)}
 #desktop-mark{position:absolute;right:-14px;bottom:66px;font-family:var(--num);font-weight:700;font-size:132px;line-height:.92;letter-spacing:-.02em;color:rgba(255,255,255,.026);pointer-events:none;text-align:right}
@@ -343,7 +367,7 @@ input[type=range]{accent-color:var(--accent);width:190px}
 .btn.dgr:hover{background:color-mix(in srgb,var(--err) 12%,transparent)}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:11.5px;color:var(--tx3);margin-bottom:6px}
-.field input[type=text],.field textarea{width:100%;background:#0e1117;border:1px solid var(--line2);border-radius:9px;padding:9px 12px;color:var(--tx);font-size:13px;outline:none;resize:none}
+.field input,.field textarea{width:100%;background:#0e1117;border:1px solid var(--line2);border-radius:9px;padding:9px 12px;color:var(--tx);font-size:13px;outline:none;resize:none}
 .field input:focus,.field textarea:focus{border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
 .type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .type-c{border:1px solid var(--line);border-radius:10px;padding:11px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--tx2);cursor:pointer}
@@ -640,6 +664,9 @@ input[type=range]{accent-color:var(--accent);width:190px}
       <button id="tb-set" title="系统设置"><i class="ri-settings-3-line"></i></button>
       <button id="tb-mem" title="记忆库管理"><i class="ri-brain-line"></i></button>
       <button id="tb-store" title="Agent Hub 生态市场"><i class="ri-store-2-line"></i></button>
+      <button id="tb-cap" title="Agent 能力中心"><i class="ri-flashlight-line"></i></button>
+      <button id="tb-tasks" title="Agent 任务中心"><i class="ri-task-line"></i></button>
+      <button id="tb-notify" title="Agent 通知"><i class="ri-notification-3-line"></i><span class="notify-badge">0</span></button>
       <button id="tb-fullscreen" title="进入全屏（⌘⇧F）"><i class="ri-fullscreen-line"></i></button>
     </div>
     <div id="mb-status">
@@ -668,6 +695,8 @@ input[type=range]{accent-color:var(--accent);width:190px}
   </div>
   <div id="toasts"></div>
 </div>
+
+<div id="notify-panel" class="hidden"></div>
 
 <div id="ava-orb" class="hidden" data-st="idle" title="AURA · 系统助手（⌘J 唤起 · 拖拽移动）">
   <span class="ring"></span>
@@ -736,6 +765,8 @@ input[type=range]{accent-color:var(--accent);width:190px}
 <div id="shutdown"><i class="ri-shut-down-line"></i><div class="t1">系统已安全关闭</div><div style="font-size:11px">点击任意位置重新启动</div></div>
 <div id="small-screen"><i class="ri-computer-line" style="font-size:36px;color:var(--tx3)"></i><div style="font-size:14px">Agent OS 桌面版面向 1024px 以上屏幕</div><div style="font-size:11.5px;color:var(--tx3)">请放大浏览器窗口后体验完整界面</div></div>
 
+<script src="octop-client.js"></script>
+
 <!-- ═══ 模块 1：系统内核 ═══ -->
 <script>
 /* Capacity-safe model request helper (available before app modules boot). */
@@ -780,6 +811,66 @@ function toast(type,title,msg){
     setTimeout(function(){t.classList.add('out');setTimeout(function(){t.remove()},320)},4200);
   }catch(e){}
 }
+var AOS_NOTIFICATIONS=[];
+function notificationText(data){
+  data=data||{};
+  var payload=data.payload||data.data||data;
+  var title=payload.title||payload.subject||payload.name||data.title||(payload.agent_name?(payload.agent_name+' · 主动消息'):'Agent 通知');
+  var message=payload.message||payload.text||payload.body||payload.content||data.message||'';
+  if(typeof message==='object')message=message.text||message.message||JSON.stringify(message);
+  return {title:String(title),message:String(message||''),agentId:payload.agent_id||payload.agentId||data.agent_id||'',kind:data.type||payload.type||'notification',time:payload.created_at||payload.timestamp||data.created_at||data.timestamp||Date.now()};
+}
+function notificationTime(value){
+  var d=new Date(typeof value==='number'&&value<100000000000?value*1000:value);
+  return isNaN(d.getTime())?'刚刚':fmtT(d);
+}
+function renderNotifications(){
+  var panel=$('#notify-panel'),badge=$('#tb-notify .notify-badge'),button=$('#tb-notify');
+  if(!panel||!badge||!button)return;
+  var unread=AOS_NOTIFICATIONS.filter(function(n){return !n.read}).length;
+  badge.textContent=unread>99?'99+':String(unread);button.classList.toggle('has-unread',unread>0);
+  if(panel.classList.contains('hidden'))return;
+  panel.innerHTML='<div class="np-head"><i class="ri-notification-3-line" style="color:var(--accent)"></i><b>Agent 通知</b><button class="np-clear">全部标为已读</button></div><div class="np-list">'+(AOS_NOTIFICATIONS.length?AOS_NOTIFICATIONS.map(function(n){return '<div class="np-item '+(n.read?'':'unread')+'" data-nid="'+esc(n.id)+'"><span class="np-icon"><i class="'+(n.kind==='error'?'ri-error-warning-line':n.kind==='cron'?'ri-time-line':'ri-sparkling-2-line')+'"></i></span><span class="np-copy"><span class="np-title">'+esc(n.title)+'</span><span class="np-msg">'+esc(n.message)+'</span><span class="np-time">'+notificationTime(n.time)+'</span></span></div>'}).join(''):'<div class="np-empty"><i class="ri-notification-off-line" style="font-size:24px;display:block;margin-bottom:8px"></i>暂无 Agent 通知</div>')+'</div>';
+  panel.querySelector('.np-clear').onclick=function(){AOS_NOTIFICATIONS.forEach(function(n){n.read=true});renderNotifications()};
+  panel.querySelectorAll('.np-item').forEach(function(item){item.onclick=function(){var n=AOS_NOTIFICATIONS.find(function(x){return x.id===item.dataset.nid});if(n)n.read=true;renderNotifications();if(n&&n.agentId){var p=S.procs.find(function(x){return x.octopId===n.agentId});if(p)launchProc(p)}}});
+}
+function receiveOctopNotification(event){
+  var n=notificationText(event.detail);n.id='n-'+Date.now()+'-'+Math.random().toString(36).slice(2);n.read=false;
+  AOS_NOTIFICATIONS.unshift(n);if(AOS_NOTIFICATIONS.length>50)AOS_NOTIFICATIONS.length=50;renderNotifications();
+  toast(n.kind==='error'?'error':'info',n.title,n.message||'Octop 推送了一条新通知');
+}
+function toggleNotificationPanel(){var panel=$('#notify-panel');if(!panel)return;panel.classList.toggle('hidden');renderNotifications()}
+$('#tb-notify').onclick=function(e){e.stopPropagation();toggleNotificationPanel()};
+function cronTime(value){if(!value)return '尚未运行';var d=new Date(typeof value==='number'&&value<100000000000?value*1000:value);return isNaN(d.getTime())?'未知时间':d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate())+' '+fmtT(d)}
+async function openTaskCenter(){
+  if(!window.OCTOP||!OCTOP.token){toast('info','请先连接 Octop','任务中心需要读取远程 Agent 的定时任务');OCTOP&&OCTOP.requestLogin();return}
+  var mo=openModal({title:'Agent 任务中心',width:760});
+  mo.body.innerHTML='<div style="display:flex;align-items:center;gap:8px;color:var(--tx2);font-size:12px;padding:2px 0 12px"><i class="ri-time-line" style="color:var(--accent)"></i><span>管理 Octop 中的定时任务，任务结果会通过 Agent 通知送达桌面。</span><button class="btn" id="cron-refresh" style="margin-left:auto;padding:5px 9px"><i class="ri-refresh-line"></i>刷新</button></div><div id="cron-list" style="max-height:480px;overflow:auto"></div>';
+  var list=mo.body.querySelector('#cron-list');
+  function render(rows){
+    if(!rows.length){list.innerHTML='<div style="padding:48px 20px;text-align:center;color:var(--tx3);border:1px dashed var(--line);border-radius:11px"><i class="ri-calendar-schedule-line" style="font-size:28px;display:block;margin-bottom:9px"></i>暂无定时任务<div style="font-size:11px;margin-top:6px">可先在 Octop 控制台创建 Cron 任务</div></div>';return}
+    list.innerHTML=rows.map(function(x){var c=x.cron,agent=x.agent;var status=x.c.last_status||'未运行';var statusClass=status==='success'?'var(--ok)':status==='error'?'var(--err)':'var(--tx3)';return '<div data-agent="'+esc(agent.id)+'" data-cron="'+esc(c.id)+'" style="border:1px solid var(--line);border-radius:11px;padding:12px 13px;margin-bottom:8px;background:rgba(255,255,255,.02)"><div style="display:flex;align-items:center;gap:9px"><i class="ri-calendar-check-line" style="color:var(--accent);font-size:16px"></i><b style="font-size:12.5px">'+esc(c.name||'未命名任务')+'</b><span style="font-size:10px;color:var(--tx3);margin-left:2px">'+esc(agent.name||agent.id)+'</span><span style="margin-left:auto;font-size:10px;color:'+(c.enabled?'var(--ok)':'var(--tx3)')+'">'+(c.enabled?'已启用':'已暂停')+'</span></div><div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--tx2);margin:9px 0 6px 25px"><span><i class="ri-repeat-line"></i> '+esc(c.trigger||'—')+'</span><span>最近运行：'+cronTime(c.last_run_at)+'</span><span>结果：<b style="color:'+statusClass+'">'+esc(status)+'</b></span></div><div style="font-size:11px;color:var(--tx3);line-height:1.5;margin:0 25px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(c.prompt||'')+'</div><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn cron-toggle" style="padding:5px 9px">'+(c.enabled?'暂停':'启用')+'</button><button class="btn pri cron-run" style="padding:5px 9px"><i class="ri-play-line"></i>立即运行</button></div></div>'}).join('');
+    list.querySelectorAll('[data-cron]').forEach(function(row){var agentId=row.dataset.agent,cronId=row.dataset.cron;row.querySelector('.cron-toggle').onclick=async function(){try{var current=rows.find(function(x){return x.agent.id===agentId&&x.c.id===cronId});await OCTOP.patchCron(agentId,cronId,{enabled:!current.c.enabled});toast('success','任务状态已更新',current.c.name);await load()}catch(e){toast('error','更新任务失败',e.message)}};row.querySelector('.cron-run').onclick=async function(){try{var current=rows.find(function(x){return x.agent.id===agentId&&x.c.id===cronId});await OCTOP.runCronNow(agentId,cronId);toast('success','任务已触发',current.c.name+' · 结果将通过通知送达')}catch(e){toast('error','触发任务失败',e.message)}}});
+  }
+  async function load(){list.innerHTML='<div style="padding:30px;text-align:center;color:var(--tx3)"><i class="ri-loader-4-line spin"></i> 正在读取任务…</div>';try{var agents=await OCTOP.listAgents();var rows=[];await Promise.all((agents||[]).map(async function(a){var id=a.agent_id||a.id;var jobs=await OCTOP.listCron(id);(jobs||[]).forEach(function(c){rows.push({agent:{id:String(id),name:a.name||id},c:c})})}));render(rows)}catch(e){list.innerHTML='<div style="padding:30px;text-align:center;color:var(--err)"><i class="ri-error-warning-line"></i> '+esc(e.message||'任务读取失败')+'</div>'}}
+  mo.body.querySelector('#cron-refresh').onclick=load;mo.foot.append(el('<button class="btn">关闭</button>'));mo.foot.querySelector('button').onclick=mo.close;load();
+}
+$('#tb-tasks').onclick=function(e){e.stopPropagation();openTaskCenter()};
+async function openCapabilityCenter(){
+  if(!window.OCTOP||!OCTOP.token){toast('info','请先连接 Octop','能力中心需要读取远程 Agent 配置');OCTOP&&OCTOP.requestLogin();return}
+  var mo=openModal({title:'Agent 能力中心',width:720});
+  mo.body.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:11px;color:var(--tx3)">Agent</span><select id="cap-agent" style="flex:1;background:#11151d;color:var(--tx);border:1px solid var(--line2);border-radius:7px;padding:6px 8px;font-size:11px"></select><button class="btn" id="cap-refresh" style="padding:5px 9px"><i class="ri-refresh-line"></i>刷新</button></div><div class="csr-tabs" style="border:1px solid var(--line);border-radius:8px 8px 0 0"><button class="cur" data-cap="skills">技能</button><button data-cap="tools">工具</button></div><div id="cap-body" style="max-height:430px;overflow:auto;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;padding:10px"></div>';
+  mo.foot.append(el('<button class="btn">关闭</button>'));mo.foot.querySelector('button').onclick=mo.close;
+  var select=mo.body.querySelector('#cap-agent'),body=mo.body.querySelector('#cap-body'),activeTab='skills',agents=[];
+  function renderSkills(rows){body.innerHTML=rows&&rows.length?rows.map(function(s){var label=typeof s.label==='object'?(s.label.zh||s.label.en||s.name):s.label||s.name;var summary=typeof s.summary==='object'?(s.summary.zh||s.summary.en||s.description):s.summary||s.description||'';return '<div style="display:flex;gap:10px;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:20px;width:25px">'+esc(s.emoji||'🧩')+'</span><span style="min-width:0"><b style="font-size:12px">'+esc(label)+'</b><span style="display:block;color:var(--tx3);font-size:10.5px;line-height:1.5;margin-top:3px">'+esc(summary)+'</span></span><span style="margin-left:auto;color:'+(s.enabled?'var(--ok)':'var(--tx3)')+';font-size:10px">'+(s.enabled?'已启用':'已禁用')+'</span></div>'}).join(''):'<div style="padding:35px;text-align:center;color:var(--tx3)">暂无技能</div>'}
+  function renderTools(rows){body.innerHTML=rows&&rows.length?rows.map(function(t){return '<div style="display:flex;align-items:center;gap:9px;padding:8px;border-bottom:1px solid rgba(255,255,255,.05)"><span style="width:25px;height:25px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);color:var(--accent)"><i class="ri-tools-line"></i></span><span style="min-width:0;flex:1"><b style="display:block;font-size:11.5px">'+esc(t.label||t.name)+'</b><small style="color:var(--tx3)">'+esc(t.category||'tool')+(t.available?'':' · 当前不可用')+'</small></span><button class="cap-toggle btn '+(t.enabled?'pri':'')+'" data-tool="'+esc(t.name)+'" data-enabled="'+(t.enabled?'1':'0')+'" '+(t.disableable?'':'disabled')+' style="padding:4px 8px;font-size:10px">'+(t.enabled?'已启用':'已禁用')+'</button></div>'}).join(''):'<div style="padding:35px;text-align:center;color:var(--tx3)">暂无工具</div>';body.querySelectorAll('.cap-toggle').forEach(function(btn){btn.onclick=async function(){var enabled=btn.dataset.enabled!=='1';btn.disabled=true;try{await OCTOP.patchTool(select.value,btn.dataset.tool,enabled);toast('success','工具状态已更新',btn.dataset.tool);await load()}catch(e){toast('error','工具更新失败',e.message);btn.disabled=false}}})}
+  async function load(){var id=select.value;if(!id)return;body.innerHTML='<div style="padding:35px;text-align:center;color:var(--tx3)"><i class="ri-loader-4-line spin"></i> 正在读取能力…</div>';try{var result=activeTab==='skills'?await OCTOP.listSkills(id):await OCTOP.toolSettings(id);activeTab==='skills'?renderSkills(result):renderTools(result&&result.tools||[])}catch(e){body.innerHTML='<div style="padding:28px;text-align:center;color:var(--err)">'+esc(e.message||'读取失败')+'</div>'}}
+  try{agents=await OCTOP.listAgents();select.innerHTML=(agents||[]).map(function(a){var id=a.agent_id||a.id;return '<option value="'+esc(id)+'">'+esc(a.name||id)+'</option>'}).join('');if(!agents.length)body.innerHTML='<div style="padding:35px;text-align:center;color:var(--tx3)">暂无远程 Agent</div>';else await load()}catch(e){body.innerHTML='<div style="padding:28px;text-align:center;color:var(--err)">'+esc(e.message||'Agent 读取失败')+'</div>'}
+  select.onchange=load;mo.body.querySelector('#cap-refresh').onclick=load;mo.body.querySelector('.csr-tabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;activeTab=b.dataset.cap;Array.prototype.forEach.call(mo.body.querySelectorAll('.csr-tabs button'),function(x){x.classList.toggle('cur',x===b)});load()};
+}
+$('#tb-cap').onclick=function(e){e.stopPropagation();openCapabilityCenter()};
+window.addEventListener('octop-notification',receiveOctopNotification);
+document.addEventListener('pointerdown',function(e){var panel=$('#notify-panel');if(panel&&!panel.classList.contains('hidden')&&!panel.contains(e.target)&&!e.target.closest('#tb-notify'))panel.classList.add('hidden')},true);
 var ctxEl=null;
 function closeMenu(){if(ctxEl){ctxEl.remove();ctxEl=null}}
 function showMenu(x,y,items){
@@ -825,6 +916,7 @@ function finalizeBoot(first){
   if(!AOS._ran){
     AOS._ran=1;
     AOS.ready.forEach(function(f){try{f()}catch(e){}});
+    try{window.dispatchEvent(new Event('aos-ready'))}catch(e){}
   }
   requestAnimationFrame(function(){try{if(typeof layoutGrid==='function')layoutGrid()}catch(e){}});
   setTimeout(function(){
@@ -861,6 +953,40 @@ function boot(first){
     if(i<BOOT_LINES.length){
       try{list.insertAdjacentHTML('beforeend','<div>'+BOOT_LINES[i]+' <span class="ok">…… OK</span></div>');bar.style.width=((i+1)/BOOT_LINES.length*100)+'%'}catch(e){}
       i++;setTimeout(step,first?200:150);
+    }else if(false){
+      if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:12px;color:var(--tx3);padding:10px 0">工作区仅对 Octop 远程 Agent 开放</div>';return}
+      var workspacePath='/';
+      function workspacePathLabel(path){return path==='/'?'工作区':path.split('/').filter(Boolean).slice(-1)[0]||'工作区'}
+      function loadWorkspace(path){
+        workspacePath=path||'/';csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取 '+esc(workspacePathLabel(workspacePath))+'…</div>';
+        OCTOP.workspaceTree(p.octopId,workspacePath).then(function(entries){
+          var parent=workspacePath==='/'?null:(workspacePath.split('/').slice(0,-1).join('/')||'/');
+          csr.innerHTML='<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;font-size:10.5px;color:var(--tx3)">'+(parent?'<button class="link-btn ws-up" style="margin:0"><i class="ri-arrow-up-line"></i> 返回上级</button>':'<span><i class="ri-folder-open-line"></i> 工作区根目录</span>')+'</div>'+(entries&&entries.length?entries.map(function(f){var path=String(f.path||'');var dir=!!f.is_dir;return '<button class="ws-entry" data-path="'+esc(path)+'" data-dir="'+(dir?'1':'0')+'" style="width:100%;display:flex;align-items:center;gap:7px;text-align:left;padding:7px 6px;border-radius:7px;color:var(--tx2);font-size:11px"><i class="'+(dir?'ri-folder-2-line':'ri-file-text-line')+'" style="color:'+(dir?'var(--warn)':'var(--accent)')+'"></i><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(workspacePathLabel(path))+'</span><span style="margin-left:auto;color:var(--tx3);font-size:9px">'+(dir?'目录':(f.size==null?'':String(f.size)+' B'))+'</span></button>'}).join(''):'<div style="padding:25px 8px;text-align:center;color:var(--tx3);font-size:11px">此目录为空</div>');
+          var up=csr.querySelector('.ws-up');if(up)up.onclick=function(){loadWorkspace(parent)};
+          csr.querySelectorAll('.ws-entry').forEach(function(row){row.onmouseenter=function(){row.style.background='rgba(255,255,255,.06)'};row.onmouseleave=function(){row.style.background=''};row.onclick=function(){var target=row.dataset.path;if(row.dataset.dir==='1')loadWorkspace(target);else loadFile(target)}});
+        }).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);line-height:1.5;padding:8px 0"><i class="ri-error-warning-line"></i> 工作区读取失败<br><span style="color:var(--tx3)">'+esc(e.message||'Agent 可能未运行')+'</span></div>'})
+      }
+      function loadFile(path){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取文件…</div>';OCTOP.workspaceFile(p.octopId,path).then(function(result){csr.innerHTML='<button class="link-btn ws-back"><i class="ri-arrow-left-line"></i> 返回文件列表</button><div style="font-size:10px;color:var(--tx3);margin:8px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(path)+'</div><pre style="margin:0;border:1px solid var(--line);border-radius:8px;background:#0a0d13;color:var(--tx2);padding:9px;font:10px/1.55 var(--mono);max-height:360px;overflow:auto;white-space:pre-wrap;word-break:break-word">'+esc(result&&result.content||'')+'</pre>';csr.querySelector('.ws-back').onclick=function(){loadWorkspace(workspacePath)}}).catch(function(e){csr.innerHTML='<button class="link-btn ws-back"><i class="ri-arrow-left-line"></i> 返回文件列表</button><div style="font-size:11px;color:var(--err);padding:10px 0">文件无法预览：'+esc(e.message||'仅支持文本文件')+'</div>';csr.querySelector('.ws-back').onclick=function(){loadWorkspace(workspacePath)}})}
+      loadWorkspace(workspacePath);
+    }else if(false){
+      if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">浏览器仅对 Octop 远程 Agent 开放</div>';return}
+      csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取浏览器会话…</div>';
+      OCTOP.browserSessions().then(function(result){var sessions=result&&result.sessions||[];if(!sessions.length){csr.innerHTML='<div style="padding:30px 8px;text-align:center;color:var(--tx3);font-size:11px"><i class="ri-window-line" style="font-size:25px;display:block;margin-bottom:8px"></i>暂无浏览器会话<div style="font-size:10px;margin-top:5px">Agent 启动浏览器后，状态会自动出现在这里</div><button class="btn pri browser-open" style="margin-top:12px;padding:6px 10px"><i class="ri-external-link-line"></i>打开浏览器画面</button></div>';csr.querySelector('.browser-open').onclick=openRemoteBrowser;return}var s=sessions[0];var owner=s.control_owner||'agent';csr.innerHTML='<div style="display:flex;align-items:center;gap:7px;font-size:11px"><i class="ri-global-line" style="color:var(--accent)"></i><b>Remote Browser</b><span style="margin-left:auto;color:'+(s.state==='idle'?'var(--tx3)':'var(--ok)')+'">'+esc(s.state||'unknown')+'</span></div><div class="kv"><span class="k">当前页面</span><span class="v" style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(s.current_url||'')+'">'+esc(s.current_url||'未打开')+'</span></div><div class="kv"><span class="k">控制权</span><span class="v">'+(owner==='user'?'用户':'Agent')+'</span></div><button class="btn pri browser-open" style="width:100%;justify-content:center;margin-top:10px"><i class="ri-external-link-line"></i>打开浏览器画面</button><button class="btn browser-handoff" style="width:100%;justify-content:center;margin-top:6px">'+(owner==='user'?'交还给 Agent':'接管浏览器')+'</button><div style="font-size:10px;color:var(--tx3);line-height:1.5;margin-top:9px">浏览器画面只在用户点击打开后建立，控制权可随时交还给 Agent。</div>';csr.querySelector('.browser-open').onclick=openRemoteBrowser;csr.querySelector('.browser-handoff').onclick=async function(){var b=this;b.disabled=true;try{await OCTOP.browserHandoff(s.session_id,owner==='user'?'agent':'user');toast('success',owner==='user'?'已交还 Agent':'已接管浏览器','控制权已同步到 Octop');renderSide('browser')}catch(e){toast('error','浏览器控制权更新失败',e.message);b.disabled=false}}}).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);padding:8px 0">浏览器状态读取失败：'+esc(e.message||'Octop 浏览器模块不可用')+'</div>'});
+    }else if(false){
+      if(!terminalSocket)renderTerminal(false);else renderTerminal(terminalSocket.readyState===1);
+      var termConnect=csr.querySelector('.term-close');if(termConnect&&!terminalSocket)termConnect.onclick=function(){terminalConnect()};
+    }else if(false){
+      if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">工作区仅对 Octop 远程 Agent 开放</div>';return}
+      var workspacePath='/';
+      function fileName(path){return path==='/'?'工作区':path.split('/').filter(Boolean).slice(-1)[0]||'工作区'}
+      function loadDir(path){workspacePath=path||'/';csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取工作区…</div>';OCTOP.workspaceTree(p.octopId,workspacePath).then(function(entries){var parent=workspacePath==='/'?null:(workspacePath.split('/').slice(0,-1).join('/')||'/');csr.innerHTML='<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">'+(parent?'<button class="link-btn ws-up" style="margin:0"><i class="ri-arrow-up-line"></i>上级</button>':'<span style="font-size:10px;color:var(--tx3)"><i class="ri-folder-open-line"></i> 工作区</span>')+'<button class="link-btn ws-upload" style="margin:0 0 0 auto"><i class="ri-upload-2-line"></i>上传</button><input class="ws-file" type="file" hidden></div>'+(entries&&entries.length?entries.map(function(f){var path=String(f.path||'');return '<button class="ws-entry" data-path="'+esc(path)+'" data-dir="'+(f.is_dir?'1':'0')+'" style="width:100%;display:flex;align-items:center;gap:7px;text-align:left;padding:7px 6px;border-radius:7px;color:var(--tx2);font-size:11px"><i class="'+(f.is_dir?'ri-folder-2-line':'ri-file-text-line')+'" style="color:'+(f.is_dir?'var(--warn)':'var(--accent)')+'"></i><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(fileName(path))+'</span><span style="margin-left:auto;color:var(--tx3);font-size:9px">'+(f.is_dir?'目录':((f.size||0)+' B'))+'</span></button>'}).join(''):'<div style="padding:25px 8px;text-align:center;color:var(--tx3);font-size:11px">此目录为空</div>');var up=csr.querySelector('.ws-up');if(up)up.onclick=function(){loadDir(parent)};var picker=csr.querySelector('.ws-file');csr.querySelector('.ws-upload').onclick=function(){picker.click()};picker.onchange=async function(){var file=picker.files&&picker.files[0];if(!file)return;var target=(workspacePath==='/'?'':workspacePath.replace(/\/$/,''))+'/'+file.name;try{await OCTOP.uploadWorkspaceFile(p.octopId,target,file);toast('success','文件已上传',file.name);loadDir(workspacePath)}catch(e){toast('error','文件上传失败',e.message)}};csr.querySelectorAll('.ws-entry').forEach(function(row){row.onclick=function(){row.dataset.dir==='1'?loadDir(row.dataset.path):openFile(row.dataset.path)}})}).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);padding:8px 0">工作区读取失败：'+esc(e.message||'Agent 可能未运行')+'</div>'})}
+      function openFile(path){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取文件…</div>';OCTOP.workspaceFile(p.octopId,path).then(function(result){csr.innerHTML='<div style="display:flex;align-items:center;gap:5px"><button class="link-btn ws-back" style="margin:0"><i class="ri-arrow-left-line"></i>返回</button><button class="btn pri ws-save" style="margin-left:auto;padding:4px 8px">保存</button></div><div style="font-size:10px;color:var(--tx3);margin:8px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(path)+'</div><textarea class="ws-editor" spellcheck="false" style="width:100%;height:310px;box-sizing:border-box;resize:none;border:1px solid var(--line);border-radius:8px;background:#0a0d13;color:var(--tx2);padding:9px;font:10px/1.55 var(--mono)"></textarea>';csr.querySelector('.ws-editor').value=result&&result.content||'';csr.querySelector('.ws-back').onclick=function(){loadDir(workspacePath)};csr.querySelector('.ws-save').onclick=async function(){var b=this;b.disabled=true;try{await OCTOP.writeWorkspaceFile(p.octopId,path,csr.querySelector('.ws-editor').value);toast('success','文件已保存',fileName(path));b.disabled=false}catch(e){toast('error','保存失败',e.message);b.disabled=false}}}).catch(function(e){csr.innerHTML='<button class="link-btn ws-back"><i class="ri-arrow-left-line"></i>返回</button><div style="font-size:11px;color:var(--err);padding:10px 0">文件无法编辑：'+esc(e.message||'仅支持文本文件')+'</div>';csr.querySelector('.ws-back').onclick=function(){loadDir(workspacePath)}})}
+      loadDir('/');
+    }else if(false){
+      if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">浏览器仅对 Octop 远程 Agent 开放</div>';return}
+      csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取浏览器会话…</div>';OCTOP.browserSessions().then(function(result){var sessions=result&&result.sessions||[];var s=sessions[0];if(!s){csr.innerHTML='<div style="padding:25px 8px;text-align:center;color:var(--tx3);font-size:11px"><i class="ri-window-line" style="font-size:25px;display:block;margin-bottom:8px"></i>暂无浏览器会话<button class="btn pri browser-open" style="display:block;margin:12px auto 0">打开浏览器画面</button></div>';csr.querySelector('.browser-open').onclick=openRemoteBrowser;return}var owner=s.control_owner||'agent';csr.innerHTML='<div class="kv"><span class="k">状态</span><span class="v" style="color:var(--ok)">'+esc(s.state||'unknown')+'</span></div><div class="kv"><span class="k">页面</span><span class="v" title="'+esc(s.current_url||'')+'">'+esc(s.current_url||'未打开')+'</span></div><div class="kv"><span class="k">控制权</span><span class="v">'+(owner==='user'?'用户':'Agent')+'</span></div><button class="btn pri browser-open" style="width:100%;justify-content:center;margin-top:8px">打开浏览器画面</button><button class="btn browser-handoff" style="width:100%;justify-content:center;margin-top:6px">'+(owner==='user'?'交还 Agent':'接管浏览器')+'</button>';csr.querySelector('.browser-open').onclick=openRemoteBrowser;csr.querySelector('.browser-handoff').onclick=async function(){try{await OCTOP.browserHandoff(s.session_id,owner==='user'?'agent':'user');renderSide('browser')}catch(e){toast('error','控制权更新失败',e.message)}}}).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);padding:8px 0">浏览器状态读取失败：'+esc(e.message)+'</div>'});
+    }else if(false){
+      if(!terminalSocket)renderTerminal(false);else renderTerminal(terminalSocket.readyState===1);
     }else{
       setTimeout(function(){
         if(window.__booted)return;
@@ -1057,6 +1183,54 @@ function iconHTML(p,spawn){
   '<div class="label">'+esc(p.name)+'</div></div>';
 }
 function renderIcons(spawnLast){grid.innerHTML=S.procs.map(function(p,i){return iconHTML(p,spawnLast&&i===S.procs.length-1)}).join('');layoutGrid()}
+function syncOctopAgents(){
+  if(!window.OCTOP||!OCTOP.token)return Promise.resolve(false);
+  return OCTOP.listAgents().then(function(remote){
+    if(!Array.isArray(remote)||!remote.length)return false;
+    var palette=['#6fc9ff','#c9f24e','#5ee6b8','#ffb454','#ff7a6b','#ff6fa5','#8f7bff'];
+    var agents=remote.map(function(a,i){
+      var rid=String(a.agent_id||a.id||i), state=a.state==='active'?'running':(a.state||'running');
+      if(['running','sleeping','stopped','error'].indexOf(state)<0)state='running';
+      return {id:'octop-'+rid,octopId:rid,remote:true,key:'octop-'+rid,name:a.name||a.agent_id||('Octop Agent '+(i+1)),desc:a.description||'由 Octop 后端托管的智能体',icon:/^ri-/.test(a.icon||'')?a.icon:'ri-sparkling-2-line',color:palette[i%palette.length],type:'Octop Agent',model:a.default_model||'Octop Runtime',maxInst:6,status:state,cpuBase:0,memB:0,cpu:0,mem:0,instances:[],pid:a.pid||'Octop',uptime:0,unreadCount:a.unread_count||0};
+    });
+    S.procs=SYS_APPS.map(function(s,i){var p={};for(var k in s)p[k]=s[k];p.id='sys'+i;p.pid=PID+=~~rnd(8,40);p.uptime=~~rnd(86400,86400*30);p.cpu=s.cpuBase;p.mem=s.memB;p.instances=[];p.errNote=null;return p}).concat(agents);
+    renderIcons();renderPins();updateDockTabs();updStatusbar();
+    toast('success','Octop Agent 已同步',agents.length+' 个远程 Agent 已加载到桌面');
+    return true;
+  }).catch(function(err){toast('warn','Octop Agent 同步失败',err.message||'请检查后端连接');return false});
+}
+var octopStatusTimer=null;
+function normalizeOctopState(state){
+  state=String(state||'running').toLowerCase();
+  if(state==='active'||state==='ready')return'running';
+  if(state==='paused'||state==='idle'||state==='sleep')return'sleeping';
+  if(state==='failed'||state==='crashed')return'error';
+  if(['running','sleeping','stopped','error'].indexOf(state)>=0)return state;
+  return'running';
+}
+function syncOctopStatuses(){
+  if(!window.OCTOP||!OCTOP.token)return Promise.resolve(false);
+  var remote=S.procs.filter(function(p){return p.remote&&p.octopId});
+  return Promise.all(remote.map(function(p){return OCTOP.agentStatus(p.octopId).then(function(s){
+    var next=normalizeOctopState(s&&s.state);if(p.status!==next){p.status=next;refreshIcon(p)}
+    p.errNote=s&&s.last_error||null;
+  }).catch(function(){})})).then(function(){return true});
+}
+function startOctopStatusPolling(){
+  if(octopStatusTimer)clearInterval(octopStatusTimer);
+  syncOctopStatuses();
+  octopStatusTimer=setInterval(syncOctopStatuses,8000);
+}
+function disconnectOctop(){
+  if(octopStatusTimer){clearInterval(octopStatusTimer);octopStatusTimer=null}
+  Array.from(WM.wins.values()).filter(function(w){return w.proc&&w.proc.remote}).forEach(function(w){WM.close(w.id)})
+  if(window.OCTOP)OCTOP.logout();
+}
+function restoreLocalAgents(){
+  preload();
+  renderIcons();renderPins();updateDockTabs();updStatusbar();
+  toast('info','已切回本地模式','Octop 远程 Agent 已移除，本地演示 Agent 已恢复');
+}
 function layoutGrid(){
   var h=grid.clientHeight;if(h<40)return;
   var n=Math.max(1,Math.floor((h+42)/198));
@@ -1144,6 +1318,10 @@ function launchProc(p,fromEl){
 }
 function procAct(p,act,silent){
   if(p&&p.sys){toast('warn','系统原生应用不可管控','系统应用为常驻进程，受底座保护');return}
+  if(p&&p.remote&&window.OCTOP&&OCTOP.token){
+    var remoteCall=(act==='restart'?OCTOP.reloadAgent:(act==='stop'||act==='pause'?OCTOP.stopAgent:OCTOP.startAgent));
+    remoteCall(p.octopId).catch(function(e){toast('error','Octop 操作失败',e.message||'后端拒绝了该操作')});
+  }
   switch(act){
     case 'start':p.status='running';p.cpu=p.cpuBase||8;ensureInst(p);if(!silent)toast('success','进程已启动',p.name+' · 实例 #1 已就绪');break;
     case 'pause':p.status='sleeping';p.cpu=0;if(!silent)toast('warn','进程已休眠',p.name+' 的 '+p.instances.length+' 个实例已挂起');break;
@@ -1460,9 +1638,10 @@ function buildChat(w){
   '<div class="ci-act"><button class="cl" title="清空当前会话"><i class="ri-broom-line"></i></button><button class="ex" title="导出会话"><i class="ri-download-line"></i></button></div>'+
   '<button class="ci-send"><i class="ri-send-plane-2-line"></i></button></div>'+
   '<div class="ci-hint"><span>'+esc(p.model)+' · 上下文 128K</span><span data-dyn="tokens">'+inst.tokens.toLocaleString()+' tokens</span></div></div></div>'+
-  '<div class="chat-side-r"><div class="csr-tabs"><button class="cur" data-t="param">参数</button><button data-t="mem">记忆</button><button data-t="log">日志</button></div><div class="csr-body"></div></div>';
+  '<div class="chat-side-r"><div class="csr-tabs"><button class="cur" data-t="workbench">工作台</button><button data-t="param">参数</button><button data-t="mem">记忆</button><button data-t="log">日志</button><button data-t="workspace">工作区</button><button data-t="terminal">终端</button><button data-t="browser">浏览器</button><button data-t="trajectory">轨迹</button></div><div class="csr-body"></div></div>';
   var q=function(s){return w.el.querySelector(s)};
   var flow=q('.chat-flow'),inner=q('.chat-inner');
+  var remoteThread=inst.remoteThreadId||null,remoteSocket=null,remoteBubble=null,remoteHistoryLoaded=false;
   function scrollEnd(){flow.scrollTop=flow.scrollHeight}
   function renderInsts(){q('.inst-list').innerHTML=p.instances.map(function(i){return '<div class="inst-row '+(i===inst?'cur':'')+'" data-no="'+i.no+'"><span class="st" style="background:'+(i.status==='running'?'var(--ok)':'var(--warn)')+'"></span>实例 #'+i.no+'<span class="go"><i class="ri-arrow-right-up-line"></i></span></div>'}).join('')}
   function renderConvs(){
@@ -1473,6 +1652,40 @@ function buildChat(w){
   }
   function renderMsgs(){inner.innerHTML=inst.convs[inst.activeConv].msgs.map(function(m){return msgHTML(p,m)}).join('');scrollEnd()}
   renderInsts();renderConvs();renderMsgs();
+  function normalizeRemoteContent(content){
+    if(typeof content==='string')return content;
+    if(Array.isArray(content))return content.map(function(x){return typeof x==='string'?x:(x&&((x.text!==undefined&&x.text)||(x.content!==undefined&&x.content))||'')}).join('');
+    if(content&&typeof content==='object')return content.text||content.content||content.zh||content.en||JSON.stringify(content);
+    return '';
+  }
+  async function loadRemoteHistory(){
+    if(!p.remote||!remoteThread||remoteHistoryLoaded||!window.OCTOP||!OCTOP.token)return;
+    remoteHistoryLoaded=true;
+    try{
+      var result=await OCTOP.history(p.octopId,remoteThread),rows=(result&&result.messages)||[];
+      var msgs=rows.map(function(m){var role=m.role==='user'?'user':'agent';return role==='user'?userMsg(normalizeRemoteContent(m.content)):agentMsg(p,normalizeRemoteContent(m.content))}).filter(function(m){return m.text});
+      if(msgs.length){inst.convs[inst.activeConv].msgs=msgs;renderConvs();renderMsgs()}
+    }catch(e){remoteHistoryLoaded=false}
+  }
+  async function loadRemoteWelcome(){
+    if(!p.remote||!window.OCTOP||!OCTOP.token)return;
+    try{
+      var result=await OCTOP.welcome(p.octopId),text=normalizeRemoteContent(result&&((result.welcome_message!==undefined&&result.welcome_message)||(result.message!==undefined&&result.message)||(result.content!==undefined&&result.content)||(result.welcome!==undefined&&result.welcome)||result));
+      var current=inst.convs[inst.activeConv];
+      if(text&&current&&current.msgs.length===1&&current.msgs[0].role==='agent'){current.msgs[0]=agentMsg(p,text);renderConvs();renderMsgs()}
+    }catch(e){/* The local welcome remains a safe fallback when Octop omits this optional response. */}
+  }
+  async function prepareRemote(){
+    if(!p.remote||!window.OCTOP||!OCTOP.token)return null;
+    if(remoteThread)return remoteThread;
+    try{
+      var rows=await OCTOP.listSessions(p.octopId),preferred=(rows||[]).find(function(x){return !x.archived})||null;
+      var created=preferred||await OCTOP.createSession(p.octopId,'agentos-'+Date.now());
+      remoteThread=created.thread_id||created.threadId||created.id;inst.remoteThreadId=remoteThread;loadRemoteHistory();loadRemoteWelcome();
+      return remoteThread;
+    }catch(e){toast('warn','Octop 会话初始化失败',e.message||'请检查 Agent 权限');return null}
+  }
+  if(p.remote)prepareRemote();
   q('.inst-list').addEventListener('click',function(e){
     var r=e.target.closest('.inst-row');if(!r)return;
     var no=+r.dataset.no,target=null;p.instances.forEach(function(i){if(i.no===no)target=i});
@@ -1488,7 +1701,16 @@ function buildChat(w){
     WM.open({id:'chat:'+p.id+':'+no,kind:'chat',proc:p,inst:ni,w:960,h:640,fromEl:iconEl(p),build:buildChat});
     renderInsts();
   };
-  q('.nc').onclick=function(){inst.convs.unshift(newConv('新会话',[welcome(p)]));inst.activeConv=0;renderConvs();renderMsgs()};
+  q('.nc').onclick=async function(){
+    if(p.remote){
+      remoteThread=null;inst.remoteThreadId=null;remoteHistoryLoaded=false;
+      var next=await prepareRemote();
+      inst.convs.unshift(newConv('新会话',[welcome(p)]));inst.activeConv=0;renderConvs();renderMsgs();
+      if(next){loadRemoteWelcome();toast('success','Octop 会话已创建','新的远程工作线程已就绪');}
+      return;
+    }
+    inst.convs.unshift(newConv('新会话',[welcome(p)]));inst.activeConv=0;renderConvs();renderMsgs();
+  };
   q('.conv-list').addEventListener('click',function(e){
     var c=e.target.closest('.conv');if(!c)return;
     inst.activeConv=+c.dataset.i;renderConvs();renderMsgs();
@@ -1510,10 +1732,43 @@ function buildChat(w){
     var conv=inst.convs[inst.activeConv];
     conv.msgs.push(userMsg(text));
     inner.insertAdjacentHTML('beforeend',msgHTML(p,conv.msgs[conv.msgs.length-1]));scrollEnd();
+    if(p.remote){runRemoteReply(conv,text);return}
     runReply(conv);
   }
   ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
   q('.ci-send').onclick=send;
+  function remoteText(data){
+    var v=data&&((data.delta!==undefined&&data.delta)||(data.text!==undefined&&data.text)||(data.content!==undefined&&data.content)||(data.message!==undefined&&data.message)||(data.chunk!==undefined&&data.chunk));
+    if(Array.isArray(v))v=v.map(function(x){return typeof x==='string'?x:(x&&x.text)||''}).join('');
+    return typeof v==='string'?v:'';
+  }
+  async function runRemoteReply(conv,text){
+    var thread=await prepareRemote();
+    if(!thread){conv.msgs.push(agentMsg(p,'Octop 会话未建立，请重新连接后再试。'));renderMsgs();return}
+    if(!window.WebSocket){conv.msgs.push(agentMsg(p,'当前环境不支持 WebSocket。'));renderMsgs();return}
+    var mid='remote-'+Date.now();
+    inner.insertAdjacentHTML('beforeend','<div class="msg agent" style="--pc:'+p.color+'"><div class="avatar'+tileCls(p.color)+'"><i class="'+p.icon+'"></i></div><div class="col"><div class="meta">'+esc(p.name)+' · Octop</div><div class="text typing" id="'+mid+'t"></div></div></div>');
+    remoteBubble=document.getElementById(mid+'t');scrollEnd();
+    try{remoteSocket=new WebSocket(OCTOP.chatUrl(p.octopId))}catch(e){remoteBubble.classList.remove('typing');remoteBubble.textContent='无法连接 Octop WebSocket：'+e.message;return}
+    var output='';
+    remoteSocket.onopen=function(){remoteSocket.send(JSON.stringify({type:'user_turn',text:text,session_key:thread,thread_id:thread,messages:[{role:'user',content:text}]}))};
+    remoteSocket.onmessage=function(event){
+      var data;try{data=JSON.parse(String(event.data))}catch(e){return}
+      if(data.type==='turn_status')return;
+      if(data.type==='hitl_required'){remoteBubble.classList.remove('typing');var req=data.request||{},actions=req.action_requests||req.actions||[];remoteBubble.textContent='此操作需要你的确认';var approval=el('<div class="card" style="margin-top:8px"><div class="ch"><i class="ri-shield-check-line"></i>人工确认<span class="badge run">等待确认</span></div><div style="padding:9px 12px;font-size:11px;color:var(--tx2)">'+esc(actions.map(function(a){return a.name||a.tool||a.description||'工具操作'}).join('、')||'Agent 请求执行一项受保护操作')+'</div><div style="display:flex;gap:6px;padding:0 12px 10px"><button class="btn pri hitl-approve" style="padding:5px 9px">批准</button><button class="btn dgr hitl-reject" style="padding:5px 9px">拒绝</button></div></div>');remoteBubble.parentNode.append(approval);function decide(decision){approval.querySelectorAll('button').forEach(function(b){b.disabled=true});approval.querySelector('.badge').textContent=decision[0].type==='approve'?'已批准':'已拒绝';OCTOP.resumeHitl(p.octopId,thread,decision,function(frame){var payload=frame&&((frame.chunk!==undefined&&frame.chunk)||frame);if(payload&&payload.type==='done'){remoteBubble.textContent=output||'（Octop 返回空内容）';conv.msgs.push(agentMsg(p,output||'（Octop 返回空内容）'));approval.remove()}else{var next=remoteText(payload);if(next){output+=next;remoteBubble.textContent=output;scrollEnd()}}}).catch(function(e){toast('error','确认提交失败',e.message)})}approval.querySelector('.hitl-approve').onclick=function(){decide([{type:'approve'}])};approval.querySelector('.hitl-reject').onclick=function(){decide([{type:'reject',message:'用户拒绝了该操作'}])};return}
+      if(data.type==='error'){remoteBubble.classList.remove('typing');remoteBubble.textContent=data.message||'Octop 返回错误';remoteSocket.close();return}
+      output+=remoteText(data);remoteBubble.textContent=output;scrollEnd();
+      if(data.type==='done'){remoteBubble.classList.remove('typing');conv.msgs.push(agentMsg(p,output||'（Octop 返回空内容）'));inst.tokens+=~~rnd(300,1800);remoteSocket.close();remoteSocket=null}
+    };
+    remoteSocket.onerror=function(){if(remoteBubble){remoteBubble.classList.remove('typing');if(!output)remoteBubble.textContent='Octop WebSocket 连接失败，请检查后端状态'}};
+    remoteSocket.onclose=function(){
+      if(remoteBubble){
+        remoteBubble.classList.remove('typing');
+        if(!output&&!remoteBubble.textContent)remoteBubble.textContent='Octop 会话已关闭，未收到回复';
+      }
+      remoteSocket=null;
+    };
+  }
   function runReply(conv){
     var sc=SCRIPTS[p.key]||SCRIPTS._def;
     sc._i=((sc._i===undefined?-1:sc._i)+1)%sc.replies.length;
@@ -1561,7 +1816,35 @@ function buildChat(w){
       })();
     })();
   }
+  function openRemoteBrowser(){
+    if(!p.remote||!window.OCTOP||!OCTOP.token){toast('info','请先连接 Octop','Remote Browser 需要远程 Agent');return}
+    var mo=openModal({title:'Remote Browser · '+p.name,width:960});
+    mo.body.innerHTML='<div style="display:flex;align-items:center;gap:7px;margin-bottom:9px"><span id="rb-status" style="font-size:11px;color:var(--warn)"><i class="ri-loader-4-line spin"></i> 正在启动浏览器…</span><span id="rb-url" style="flex:1;min-width:0;font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span><button class="btn" id="rb-take" style="padding:5px 8px">接管控制</button><button class="btn dgr" id="rb-stop" style="padding:5px 8px">停止</button></div><div style="display:flex;gap:6px;margin-bottom:8px"><input id="rb-nav" placeholder="输入网址，例如 https://example.com" style="flex:1;background:#10141c;border:1px solid var(--line2);border-radius:7px;color:var(--tx);padding:7px 9px;font-size:11px"><button class="btn pri" id="rb-go" style="padding:5px 10px"><i class="ri-arrow-right-line"></i>导航</button></div><div id="rb-tabs" style="display:flex;gap:4px;overflow-x:auto;margin-bottom:7px"><button class="btn" id="rb-new" title="新建标签页" style="padding:4px 8px"><i class="ri-add-line"></i></button></div><div id="rb-viewport" style="min-height:360px;display:flex;align-items:center;justify-content:center;background:#07090d;border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative"><div style="color:var(--tx3);font-size:12px">等待浏览器画面…</div></div><div style="font-size:10px;color:var(--tx3);margin-top:8px">浏览器运行在 Octop 环境；点击画面后会把鼠标事件转发给远程浏览器。</div>';
+    var status=mo.body.querySelector('#rb-status'),urlLabel=mo.body.querySelector('#rb-url'),viewport=mo.body.querySelector('#rb-viewport'),tabsEl=mo.body.querySelector('#rb-tabs'),nav=mo.body.querySelector('#rb-nav'),socket=null,img=null;
+    function setStatus(text,color){status.style.color=color||'var(--tx2)';status.innerHTML='<i class="ri-global-line"></i> '+esc(text)}
+    function closeBrowser(){if(socket){try{socket.send(JSON.stringify({type:'stop'}))}catch(e){}try{socket.close()}catch(e){}socket=null}var sid=p.remote?'user-'+(window.OCTOP.token||'').slice(-10):'';if(sid)OCTOP.browserHandoff(sid,'agent').catch(function(){});mo.close()}
+    mo.m.querySelector('.m-x').onclick=closeBrowser;mo.body.querySelector('#rb-stop').onclick=closeBrowser;
+    mo.body.querySelector('#rb-take').onclick=function(){var sid='user-'+(window.OCTOP.token||'').slice(-10);OCTOP.browserHandoff(sid,'user').then(function(){toast('success','已接管浏览器','当前 Desktop 拥有浏览器控制权')}).catch(function(e){toast('error','接管失败',e.message)})};
+    mo.body.querySelector('#rb-go').onclick=function(){var value=nav.value.trim();if(value&&socket&&socket.readyState===1)socket.send(JSON.stringify({type:'navigate',url:value}))};nav.onkeydown=function(e){if(e.key==='Enter')mo.body.querySelector('#rb-go').click()};
+    mo.body.querySelector('#rb-new').onclick=function(){if(socket&&socket.readyState===1)socket.send(JSON.stringify({type:'tab_new'}))};
+    function renderBrowserTabs(tabs){tabsEl.querySelectorAll('.rb-tab').forEach(function(x){x.remove()});(tabs||[]).forEach(function(t){var item=el('<span class="rb-tab" style="display:flex;align-items:center;flex:none;border:1px solid '+(t.active?'var(--accent)':'var(--line)')+';border-radius:7px;background:rgba(255,255,255,.03)"><button class="rb-switch" style="max-width:170px;padding:4px 7px;color:var(--tx2);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(t.title||t.url||'新标签页')+'</button><button class="rb-close" style="padding:4px 6px;color:var(--tx3)"><i class="ri-close-line"></i></button></span>');item.querySelector('.rb-switch').onclick=function(){socket&&socket.send(JSON.stringify({type:'tab_switch',tab_id:t.id}))};item.querySelector('.rb-close').onclick=function(){socket&&socket.send(JSON.stringify({type:'tab_close',tab_id:t.id}))};tabsEl.insertBefore(item,tabsEl.querySelector('#rb-new'))})}
+    function openSocket(){try{socket=new WebSocket(OCTOP.browserStreamUrl(false,900,560))}catch(e){setStatus('连接失败','var(--err)');return}socket.onopen=function(){setStatus('浏览器已连接','var(--ok)');socket.send(JSON.stringify({type:'start',url:'',width:900,height:560,reuse_session:true,session_id:'user-'+(window.OCTOP.token||'').slice(-10)}))};socket.onmessage=function(event){var data;try{data=JSON.parse(String(event.data))}catch(e){return}if(data.type==='frame'){if(!img){viewport.innerHTML='';img=document.createElement('img');img.alt='Remote Browser 画面';img.style.cssText='display:block;width:100%;height:auto;cursor:crosshair';viewport.append(img)}img.src='data:image/jpeg;base64,'+data.data}else if(data.type==='tabs'){renderBrowserTabs(data.tabs)}else if(data.type==='session_update'){urlLabel.textContent=data.current_url||'about:blank';nav.value=data.current_url||'';if(data.state)setStatus(data.state==='streaming'?'浏览器画面流':'浏览器空闲',data.state==='streaming'?'var(--ok)':'var(--tx3)')}else if(data.type==='error'){setStatus(data.message||'浏览器错误','var(--err)')}};socket.onerror=function(){setStatus('浏览器连接失败','var(--err)')};socket.onclose=function(){if(socket){setStatus('浏览器已断开','var(--tx3)');socket=null}}}
+    viewport.addEventListener('click',function(e){if(!img||!socket||socket.readyState!==1)return;var r=img.getBoundingClientRect();var x=Math.max(0,Math.round((e.clientX-r.left)*900/r.width)),y=Math.max(0,Math.round((e.clientY-r.top)*560/r.height));socket.send(JSON.stringify({type:'click',x:x,y:y,button:'left',buttons:0,clickCount:1}))});openSocket();
+  }
   var csr=q('.csr-body');
+  var terminalSocket=null,terminalSession='agentos-'+String(p.octopId||p.id);
+  function terminalConnect(){
+    if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">终端仅对 Octop 远程 Agent 开放</div>';return}
+    if(terminalSocket&&terminalSocket.readyState===1){renderTerminal(true);return}
+    csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在连接 Agent 终端…</div>';
+    try{terminalSocket=new WebSocket(OCTOP.terminalUrl(p.octopId,terminalSession,76,22))}catch(e){terminalSocket=null;renderTerminal(false,e.message);return}
+    terminalSocket.onopen=function(){renderTerminal(true);terminalSocket.send(JSON.stringify({type:'resize',cols:76,rows:22}))};
+    terminalSocket.onmessage=function(event){var data;try{data=JSON.parse(String(event.data))}catch(e){return}if(data.type==='output'||data.type==='history'){appendTerminal(data.data||'')}else if(data.type==='error'){appendTerminal('\n[错误] '+(data.message||'终端错误')+'\n')}else if(data.type==='exit'){appendTerminal('\n[进程已退出 '+data.code+']\n')}};
+    terminalSocket.onerror=function(){appendTerminal('\n[终端连接失败]\n')};
+    terminalSocket.onclose=function(){if(terminalSocket){appendTerminal('\n[终端已断开]\n');terminalSocket=null}};
+  }
+  function appendTerminal(text){var out=csr.querySelector('.term-out');if(!out)return;out.textContent=(out.textContent+String(text)).slice(-30000);out.scrollTop=out.scrollHeight}
+  function renderTerminal(connected,error){csr.innerHTML='<div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:10px;color:'+(connected?'var(--ok)':'var(--warn)')+'"><i class="ri-terminal-box-line"></i>'+(connected?'已连接 · Agent 工作区终端':'未连接 · '+esc(error||'点击连接开始'))+'<button class="btn term-close" style="margin-left:auto;padding:3px 7px">'+(connected?'断开':'连接')+'</button></div><pre class="term-out" style="height:245px;overflow:auto;margin:0 0 7px;padding:8px;border-radius:8px;background:#07090d;border:1px solid var(--line);color:#c6d2df;font:10px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word">'+(connected?'':'终端命令将在 Octop Agent 工作区中执行。')+'</pre><input class="term-input" placeholder="输入命令并回车…" style="width:100%;box-sizing:border-box;background:#10141c;border:1px solid var(--line2);border-radius:7px;color:var(--tx);padding:7px 8px;font:10.5px var(--mono)">';var close=csr.querySelector('.term-close');close.onclick=function(){if(connected&&terminalSocket){terminalSocket.send(JSON.stringify({type:'close'}));terminalSocket.close();terminalSocket=null}else terminalConnect()};var input=csr.querySelector('.term-input');input.disabled=!connected;input.onkeydown=function(e){if(e.key==='Enter'&&input.value.trim()&&terminalSocket&&terminalSocket.readyState===1){terminalSocket.send(JSON.stringify({type:'input',data:input.value+'\n'}));input.value=''}}}
   function renderSide(tab){
     if(tab==='param'){
       var STC={running:'var(--ok)',sleeping:'var(--warn)',error:'var(--err)',stopped:'var(--idle)'};
@@ -1586,12 +1869,33 @@ function buildChat(w){
       csr.querySelector('.link-btn').onclick=function(){try{openConsole('logs',p)}catch(e){toast('warn','控制台模块未加载','')}};
     }
   }
+  function renderWorkbenchPanel(){
+    var remote=p.remote&&window.OCTOP&&OCTOP.token;
+    csr.innerHTML='<div style="font-size:11px;color:var(--tx2);line-height:1.5;margin-bottom:10px"><i class="ri-layout-grid-line" style="color:var(--accent)"></i> '+(remote?'远程 Agent 工作台':'本地 Agent 工作台')+'<span style="display:block;color:var(--tx3);font-size:10px;margin-top:3px">把对话、执行过程和工作资源集中在一个窗口。</span></div><div class="wb-grid"><button class="wb-card" data-wb="param"><i class="ri-bar-chart-2-line"></i><span><b>对话与参数</b><small>'+esc(p.model||'Agent Runtime')+'</small></span></button><button class="wb-card" data-wb="trajectory"><i class="ri-pulse-line"></i><span><b>执行轨迹</b><small>工具调用 · 任务步骤</small></span></button><button class="wb-card" data-wb="workspace"><i class="ri-folder-2-line"></i><span><b>工作区</b><small>文件浏览 · 编辑 · 上传</small></span></button><button class="wb-card" data-wb="terminal"><i class="ri-terminal-box-line"></i><span><b>安全终端</b><small>需要手动连接</small></span></button><button class="wb-card" data-wb="browser"><i class="ri-global-line"></i><span><b>Remote Browser</b><small>画面 · 标签页 · 接管</small></span></button><button class="wb-card" data-wb="mem"><i class="ri-brain-line"></i><span><b>记忆</b><small>Agent 长期上下文</small></span></button></div><div style="margin-top:12px;padding:9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.02);font-size:10px;color:var(--tx3)"><i class="ri-shield-check-line" style="color:var(--ok)"></i> 工具权限、浏览器接管和终端连接都由 Octop 权限与用户操作控制。</div>';
+    csr.querySelectorAll('.wb-card').forEach(function(btn){btn.onclick=function(){var target=btn.dataset.wb;var tab=w.el.querySelector('.csr-tabs button[data-t="'+target+'"]');if(tab)tab.click()}})
+  }
+  function renderWorkspacePanel(){
+    if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">工作区仅对 Octop 远程 Agent 开放</div>';return}
+    var current='/';
+    function nameOf(path){return path==='/'?'工作区':path.split('/').filter(Boolean).slice(-1)[0]||'工作区'}
+    function list(path){current=path||'/';csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取工作区…</div>';OCTOP.workspaceTree(p.octopId,current).then(function(entries){var parent=current==='/'?null:(current.split('/').slice(0,-1).join('/')||'/');csr.innerHTML='<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">'+(parent?'<button class="link-btn ws-up" style="margin:0"><i class="ri-arrow-up-line"></i>上级</button>':'<span style="font-size:10px;color:var(--tx3)"><i class="ri-folder-open-line"></i> 工作区</span>')+'<button class="link-btn ws-upload" style="margin:0 0 0 auto"><i class="ri-upload-2-line"></i>上传</button><input class="ws-file" type="file" hidden></div>'+(entries&&entries.length?entries.map(function(f){var path=String(f.path||'');return '<button class="ws-entry" data-path="'+esc(path)+'" data-dir="'+(f.is_dir?'1':'0')+'" style="width:100%;display:flex;align-items:center;gap:7px;text-align:left;padding:7px 6px;border-radius:7px;color:var(--tx2);font-size:11px"><i class="'+(f.is_dir?'ri-folder-2-line':'ri-file-text-line')+'" style="color:'+(f.is_dir?'var(--warn)':'var(--accent)')+'"></i><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(nameOf(path))+'</span><span style="margin-left:auto;color:var(--tx3);font-size:9px">'+(f.is_dir?'目录':((f.size||0)+' B'))+'</span></button>'}).join(''):'<div style="padding:25px 8px;text-align:center;color:var(--tx3);font-size:11px">此目录为空</div>');var up=csr.querySelector('.ws-up');if(up)up.onclick=function(){list(parent)};var picker=csr.querySelector('.ws-file');csr.querySelector('.ws-upload').onclick=function(){picker.click()};picker.onchange=async function(){var file=picker.files&&picker.files[0];if(!file)return;var target=(current==='/'?'':current.replace(/\/$/,''))+'/'+file.name;try{await OCTOP.uploadWorkspaceFile(p.octopId,target,file);toast('success','文件已上传',file.name);list(current)}catch(e){toast('error','文件上传失败',e.message)}};csr.querySelectorAll('.ws-entry').forEach(function(row){row.onclick=function(){row.dataset.dir==='1'?list(row.dataset.path):edit(row.dataset.path)}})}).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);padding:8px 0">工作区读取失败：'+esc(e.message||'Agent 可能未运行')+'</div>'})}
+    function edit(path){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取文件…</div>';OCTOP.workspaceFile(p.octopId,path).then(function(result){csr.innerHTML='<div style="display:flex;align-items:center;gap:5px"><button class="link-btn ws-back" style="margin:0"><i class="ri-arrow-left-line"></i>返回</button><button class="btn pri ws-save" style="margin-left:auto;padding:4px 8px">保存</button></div><div style="font-size:10px;color:var(--tx3);margin:8px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(path)+'</div><textarea class="ws-editor" spellcheck="false" style="width:100%;height:310px;box-sizing:border-box;resize:none;border:1px solid var(--line);border-radius:8px;background:#0a0d13;color:var(--tx2);padding:9px;font:10px/1.55 var(--mono)"></textarea>';csr.querySelector('.ws-editor').value=result&&result.content||'';csr.querySelector('.ws-back').onclick=function(){list(current)};csr.querySelector('.ws-save').onclick=async function(){var b=this;b.disabled=true;try{await OCTOP.writeWorkspaceFile(p.octopId,path,csr.querySelector('.ws-editor').value);toast('success','文件已保存',nameOf(path))}catch(e){toast('error','保存失败',e.message)}b.disabled=false}}).catch(function(e){csr.innerHTML='<button class="link-btn ws-back"><i class="ri-arrow-left-line"></i>返回</button><div style="font-size:11px;color:var(--err);padding:10px 0">文件无法编辑：'+esc(e.message||'仅支持文本文件')+'</div>';csr.querySelector('.ws-back').onclick=function(){list(current)}})}
+    list('/');
+  }
+  function renderBrowserPanel(){
+    if(!p.remote||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">浏览器仅对 Octop 远程 Agent 开放</div>';return}
+    csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取浏览器会话…</div>';OCTOP.browserSessions().then(function(result){var s=(result&&result.sessions||[])[0];if(!s){csr.innerHTML='<div style="padding:25px 8px;text-align:center;color:var(--tx3);font-size:11px"><i class="ri-window-line" style="font-size:25px;display:block;margin-bottom:8px"></i>暂无浏览器会话<button class="btn pri browser-open" style="display:block;margin:12px auto 0">打开浏览器画面</button></div>';csr.querySelector('.browser-open').onclick=openRemoteBrowser;return}var owner=s.control_owner||'agent';csr.innerHTML='<div class="kv"><span class="k">状态</span><span class="v" style="color:var(--ok)">'+esc(s.state||'unknown')+'</span></div><div class="kv"><span class="k">页面</span><span class="v" title="'+esc(s.current_url||'')+'">'+esc(s.current_url||'未打开')+'</span></div><div class="kv"><span class="k">控制权</span><span class="v">'+(owner==='user'?'用户':'Agent')+'</span></div><button class="btn pri browser-open" style="width:100%;justify-content:center;margin-top:8px">打开浏览器画面</button><button class="btn browser-handoff" style="width:100%;justify-content:center;margin-top:6px">'+(owner==='user'?'交还 Agent':'接管浏览器')+'</button>';csr.querySelector('.browser-open').onclick=openRemoteBrowser;csr.querySelector('.browser-handoff').onclick=async function(){try{await OCTOP.browserHandoff(s.session_id,owner==='user'?'agent':'user');renderBrowserPanel()}catch(e){toast('error','控制权更新失败',e.message)}}}).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);padding:8px 0">浏览器状态读取失败：'+esc(e.message||'Octop 浏览器模块不可用')+'</div>'})
+  }
+  function renderTrajectoryPanel(){
+    if(!p.remote||!remoteThread||!window.OCTOP||!OCTOP.token){csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:10px 0">当前会话还没有可用的远程轨迹</div>';return}
+    csr.innerHTML='<div style="font-size:11px;color:var(--tx3);padding:8px 0"><i class="ri-loader-4-line spin"></i> 正在读取执行轨迹…</div>';Promise.all([OCTOP.trajectory(p.octopId,remoteThread,30),OCTOP.trajectoryMetrics(p.octopId,remoteThread)]).then(function(pair){var result=pair[0]||{},metrics=pair[1]||{},events=result.events||[],toolCount=events.filter(function(e){return e.kind==='tool'}).length;csr.innerHTML='<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px"><span class="badge done">'+events.length+' 事件</span><span class="badge run">'+toolCount+' 工具调用</span><span class="badge" style="color:var(--tx3)">'+(metrics.turns||0)+' 轮对话</span><button class="btn" id="traj-refresh" style="margin-left:auto;padding:4px 7px"><i class="ri-refresh-line"></i></button></div>'+(events.length?events.slice().reverse().map(function(e){var color=e.is_error?'var(--err)':e.kind==='tool'?'var(--accent)':'var(--tx2)';return '<div style="padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.05);font-size:10.5px"><div style="display:flex;gap:6px;align-items:center"><i class="'+(e.kind==='tool'?'ri-tools-line':'ri-pulse-line')+'" style="color:'+color+'"></i><b style="color:'+color+'">'+esc(e.summary||e.kind||'event')+'</b><span style="margin-left:auto;color:var(--tx3);font:9px var(--mono)">#'+esc(e.seq)+'</span></div>'+(e.payload&&e.payload.result?'<div style="color:var(--tx3);margin:3px 0 0 20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(String(e.payload.result).slice(0,120))+'</div>':'')+'</div>'}).join(''):'<div style="padding:30px 8px;text-align:center;color:var(--tx3)">暂无轨迹事件</div>');csr.querySelector('#traj-refresh').onclick=renderTrajectoryPanel}).catch(function(e){csr.innerHTML='<div style="font-size:11px;color:var(--err);padding:8px 0">轨迹读取失败：'+esc(e.message||'Octop 轨迹服务不可用')+'</div>'})
+  }
   w.el.querySelector('.csr-tabs').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
     Array.prototype.forEach.call(w.el.querySelectorAll('.csr-tabs button'),function(x){x.classList.toggle('cur',x===b)});
-    renderSide(b.dataset.t);
+    if(b.dataset.t==='workbench')renderWorkbenchPanel();else if(b.dataset.t==='workspace')renderWorkspacePanel();else if(b.dataset.t==='browser')renderBrowserPanel();else if(b.dataset.t==='trajectory')renderTrajectoryPanel();else if(b.dataset.t==='terminal'){if(!terminalSocket)renderTerminal(false);else renderTerminal(terminalSocket.readyState===1)}else renderSide(b.dataset.t);
   });
-  renderSide('param');
+  renderWorkbenchPanel();
   w.tick=function(){
     var t1=w.el.querySelector('[data-dyn=tokens]');if(t1)t1.textContent=inst.tokens.toLocaleString();
     var t2=w.el.querySelector('[data-dyn=uptime]');if(t2)t2.textContent=fmtDur(p.uptime);
@@ -1678,10 +1982,31 @@ function showShortcuts(){
  $('#st-net').onclick=function(e){
   e.stopPropagation();
   var old=$('#net-pop');if(old){old.remove();return}
-  var p=el('<div id="net-pop"><div class="h"><span>Agent Mesh</span><span class="stb st-running"><i></i>在线</span></div><div class="r"><span>下行</span><span id="np-d">'+rnd(8,40).toFixed(1)+' MB/s</span></div><div class="r"><span>上行</span><span>'+rnd(2,10).toFixed(1)+' MB/s</span></div><div class="r"><span>节点</span><span>12 / 12</span></div></div>');
+  var octopOnline=window.OCTOP&&window.OCTOP.online&&!!window.OCTOP.token;
+  var octopReachable=window.OCTOP&&window.OCTOP.online;
+  var octopUrl=window.OCTOP&&window.OCTOP.baseUrl||'http://127.0.0.1:8088';
+  var p=el('<div id="net-pop"><div class="h"><span>Agent Mesh</span><span class="stb st-running"><i></i>在线</span></div><div class="r"><span>下行</span><span id="np-d">'+rnd(8,40).toFixed(1)+' MB/s</span></div><div class="r"><span>上行</span><span>'+rnd(2,10).toFixed(1)+' MB/s</span></div><div class="r"><span>节点</span><span>12 / 12</span></div><div class="r"><span>Octop API</span><span style="color:'+(octopOnline?'var(--ok)':(octopReachable?'var(--warn)':'var(--tx3)'))+'">'+(octopOnline?'已连接':(octopReachable?'API 可达 · 未登录':'未连接'))+'</span></div><div class="r" style="font-size:10px;color:var(--tx3)"><span>Endpoint</span><span>'+esc(octopUrl)+'</span></div><button class="btn pri" id="octop-connect" style="width:100%;margin-top:8px;justify-content:center">'+(octopOnline?'同步 Agent':'连接 Octop')+'</button>'+(octopOnline?'<button class="btn" id="octop-disconnect" style="width:100%;margin-top:6px;justify-content:center">断开并切回本地</button>':'')+'</div>');
   document.body.append(p);
+  if(!octopReachable&&window.OCTOP&&OCTOP.lastError){var diag=el('<div style="font-size:10px;line-height:1.5;color:var(--warn);margin-top:8px"></div>');diag.textContent='诊断：'+OCTOP.lastError;p.append(diag)}
+  p.querySelector('#octop-connect').onclick=function(){if(octopOnline){syncOctopAgents();startOctopStatusPolling()}else OCTOP.requestLogin();p.remove()};
+  var disconnect=p.querySelector('#octop-disconnect');if(disconnect)disconnect.onclick=function(){disconnectOctop();p.remove()};
   var tm=setInterval(function(){var d=p.querySelector('#np-d');if(!d.isConnected){clearInterval(tm);return}d.textContent=rnd(8,40).toFixed(1)+' MB/s'},1000);
 };
+window.addEventListener('octop-login-request',function(){
+  var mo=openModal({title:'连接 Octop 后端',width:420});
+  mo.body.innerHTML='<div style="font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:12px">登录后，桌面会从 Octop 加载真实 Agent，并通过 JWT 建立工作会话。</div><label class="field"><span>Endpoint</span><input id="octop-url" value="'+esc(window.OCTOP.baseUrl)+'" placeholder="http://127.0.0.1:8088"></label><label class="field"><span>用户名</span><input id="octop-user" autocomplete="username" placeholder="admin"></label><label class="field"><span>密码</span><input id="octop-pass" type="password" autocomplete="current-password" placeholder="Octop 密码"></label><div id="octop-error" style="color:var(--err);font-size:11px;min-height:18px;margin-top:7px"></div>';
+  mo.foot.append(el('<button class="btn">取消</button>'),el('<button class="btn pri">连接</button>'));
+  mo.foot.querySelector('.btn').onclick=mo.close;
+  mo.foot.querySelector('.btn.pri').onclick=async function(){
+    var url=mo.body.querySelector('#octop-url').value,user=mo.body.querySelector('#octop-user').value,pass=mo.body.querySelector('#octop-pass').value,err=mo.body.querySelector('#octop-error'),btn=this;
+    if(!user||!pass){err.textContent='请输入用户名和密码';return}
+    btn.disabled=true;btn.textContent='连接中…';
+    try{await OCTOP.configure(url);await OCTOP.login(user,pass);mo.close()}catch(e){err.textContent=e.message||'连接失败';btn.disabled=false;btn.textContent='连接'}
+  };
+});
+window.addEventListener('octop-authenticated',function(){syncOctopAgents().then(startOctopStatusPolling)});
+window.addEventListener('octop-disconnected',restoreLocalAgents);
+window.addEventListener('octop-auth-expired',function(){disconnectOctop();toast('warn','Octop 登录已过期','远程 Agent 已断开，请重新连接后继续工作')});
 document.addEventListener('pointerdown',function(e){var p=$('#net-pop');if(p&&!p.contains(e.target)&&!e.target.closest('#st-net'))p.remove()},true);
 function updStatusbar(){var n=0;S.procs.forEach(function(p){if(!p.sys)n++});$('#st-proc').innerHTML='<i class="ri-apps-2-line"></i><b>'+n+'</b>'}
 function tick(){

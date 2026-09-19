@@ -7,7 +7,8 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron .",
-    "lint": "node --check main.cjs && node --check preload.cjs"
+    "lint": "node --check main.cjs && node --check preload.cjs",
+    "octop:check": "node scripts/octop-smoke.cjs"
   },
   "devDependencies": {
     "electron": "^38.1.0"
