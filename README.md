@@ -30,3 +30,7 @@ Electron 启动时会先检查 `http://127.0.0.1:8088/api/health`；如果 Octop
 Agent Hub 连接 Octop 后会同步专家、SkillHub、Plugin 和 Connector 目录；安装与权限仍由 Octop 执行，Desktop 负责展示、确认和打开工作台。
 
 Desktop 通过统一的 `OCTOP.hubCatalog()`、`OCTOP.hubInstalled()` 和 `OCTOP.hubInstall()` 适配层访问生态资产，后续可直接切换到 Octop 的统一 Hub API。
+
+## AURA 数字人 UX
+
+AURA 支持悬浮球、小窗与全屏 Avatar Mode，并可在 Octop 登录后连接真实的 `AURA 系统助手` Agent。产品交互、接入契约、降级策略和上线验收见 [DIGITAL-HUMAN-UX.md](./DIGITAL-HUMAN-UX.md)。

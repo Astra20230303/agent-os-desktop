@@ -501,6 +501,25 @@ input[type=range]{accent-color:var(--accent);width:190px}
 .am-ttsbtn.on{color:var(--accent)}
 .am-send{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#10130a;font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
 .am-foot{padding:7px 12px;font-size:10.5px;color:var(--tx3);border-top:1px solid var(--line);display:flex;justify-content:space-between;font-family:var(--num)}
+
+/* AURA commercial assistant surface */
+:root{--accent:#0a84ff;--aura-blue:#0a84ff;--aura-blue-soft:#66b6ff;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16)}
+#ava-mini{right:24px;bottom:76px;width:min(688px,calc(100vw - 48px));max-height:min(700px,calc(100vh - 104px));border-radius:22px;background:linear-gradient(155deg,rgba(24,29,40,.985),rgba(12,15,22,.985));border:1px solid rgba(255,255,255,.16);box-shadow:0 34px 100px rgba(0,0,0,.62),0 0 0 1px rgba(10,132,255,.06),inset 0 1px rgba(255,255,255,.08);}
+#ava-mini:before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(460px 180px at 10% -10%,rgba(10,132,255,.16),transparent 70%);}
+.am-head{position:relative;z-index:1;padding:18px 20px 16px;gap:13px;background:rgba(255,255,255,.025);border-bottom:1px solid rgba(255,255,255,.1)}
+.am-face{width:48px;height:48px;border-radius:15px;border:1px solid rgba(10,132,255,.4);box-shadow:0 0 0 4px rgba(10,132,255,.07),0 8px 20px rgba(0,0,0,.22)}
+.am-tt b{font-size:17px;letter-spacing:.16em}.am-tt span{font-size:11px;color:#93a0b5;margin-top:4px}
+.am-tt:after{content:'在线';display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:3px 8px;border-radius:20px;background:rgba(48,209,88,.1);color:#67e895;font-size:10px;letter-spacing:.03em}.am-tt:after{box-shadow:inset 0 0 0 1px rgba(48,209,88,.18)}
+.am-tt:before{content:'';position:absolute;margin:34px 0 0 40px;width:5px;height:5px;border-radius:50%;background:#30d158;box-shadow:0 0 0 3px rgba(48,209,88,.12)}
+.am-head button{width:34px;height:34px;border-radius:10px;font-size:16px;color:#92a0b5}.am-head button:hover{background:rgba(255,255,255,.1);color:#fff}
+.am-chips{position:relative;z-index:1;padding:14px 20px 12px;gap:8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.am-chips button{font-size:11.5px;padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.14);transition:.18s ease}.am-chips button:hover{background:rgba(10,132,255,.14);color:#a9d6ff;border-color:rgba(10,132,255,.55);transform:translateY(-1px)}
+.am-flow{padding:18px 20px 12px;min-height:250px;background:linear-gradient(180deg,rgba(0,0,0,.08),transparent 36%)}
+.am-inner{gap:15px}.am-msg.user{max-width:78%;padding:10px 14px;border-radius:14px 14px 5px 14px;background:rgba(10,132,255,.18);border-color:rgba(10,132,255,.35);font-size:13px}.am-msg.bot{gap:11px}.am-msg.bot .av{width:34px;height:34px;border-radius:11px;border-color:rgba(10,132,255,.28);box-shadow:0 4px 12px rgba(0,0,0,.2)}.am-msg.bot .bd{max-width:90%}.am-msg.bot .tx{padding:11px 14px;border-radius:14px 14px 14px 5px;background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.1);font-size:13px;line-height:1.7}
+.am-card{margin-top:8px;border-radius:14px;background:rgba(8,12,18,.52);border-color:rgba(255,255,255,.13);box-shadow:inset 0 1px rgba(255,255,255,.035)}.am-card .ch{padding:11px 14px;font-size:12px;background:rgba(255,255,255,.025)}.am-card .ch i{color:#66b6ff}
+.am-cap{display:grid;grid-template-columns:24px 74px minmax(0,1fr);align-items:center;gap:8px;padding:10px 14px;font-size:12.5px;color:#e2e8f2}.am-cap i{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:7px;background:rgba(10,132,255,.13);color:#67baff;font-size:14px}.am-cap em{margin-left:0;overflow:hidden;text-overflow:ellipsis;font-size:11px;color:#8c98aa}.am-grid{padding:12px 14px;gap:10px}.am-grid div{padding:9px 10px;border-radius:9px;background:rgba(255,255,255,.035);font-size:10.5px}.am-grid b{font-size:17px;margin-top:4px}
+.am-input{position:relative;z-index:1;padding:14px 18px;border-top:1px solid rgba(255,255,255,.1);background:rgba(7,10,16,.36);gap:9px}.am-mic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.045);font-size:17px}.am-input input{height:40px;padding:0 13px;border-radius:11px;background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.13);font-size:13px}.am-input input::placeholder{color:#768297}.am-send{width:40px;height:40px;border-radius:12px;background:#0a84ff;color:#fff;box-shadow:0 7px 18px rgba(10,132,255,.25)}.am-ttsbtn{width:34px;height:34px}.am-foot{padding:10px 18px;color:#6e7b90;background:rgba(5,8,13,.3);font-size:10.5px}.am-foot span:first-child{color:#8290a4}
+@media(max-width:620px){#ava-mini{right:12px;bottom:64px;width:calc(100vw - 24px);max-height:calc(100vh - 84px)}.am-flow{padding:14px 14px 8px}.am-chips{padding-left:14px;padding-right:14px}.am-head{padding-left:14px;padding-right:14px}.am-input{padding:11px 12px}.am-cap{grid-template-columns:24px 68px minmax(0,1fr);padding:9px 11px}.am-cap em{white-space:normal;line-height:1.35}}
 #ava-dh{position:fixed;inset:0;z-index:9200;background:radial-gradient(900px 620px at 50% 28%,color-mix(in srgb,var(--accent) 6%,transparent),transparent 70%),radial-gradient(circle,rgba(255,255,255,.025) 1px,transparent 1.5px);background-color:#05060a;background-size:auto,26px 26px;display:flex;flex-direction:column;animation:dhin .4s}
 @keyframes dhin{from{opacity:0}}
 .dh-top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px}
@@ -2571,7 +2590,7 @@ AOS.reg('apps');
 
 <!-- ═══ 模块 4：AURA 系统助手 ═══ -->
 <script>
-var AVA={cfg:{tts:false},state:'idle',view:'none',msgs:[],greeted:false,heard:''};
+var AVA={cfg:{tts:false},state:'idle',view:'none',msgs:[],greeted:false,heard:'',remoteAgentId:'JMG293',remoteThreadId:null,remoteSocket:null,remoteReady:false};
 try{var _c=JSON.parse(localStorage.getItem('aos-ava')||'{}');for(var _k in _c)AVA.cfg[_k]=_c[_k]}catch(e){}
 function avaSaveCfg(){try{localStorage.setItem('aos-ava',JSON.stringify(AVA.cfg))}catch(e){}}
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -2706,17 +2725,63 @@ function avaRoute(t){
   var fl=['这个问题我记下了。调度进程、查系统状态、全局检索是我的强项；深度开发可以交给 Agent Studio，搭专家 Agent 用 Workforce Builder。','收到。作为系统助手，我更擅长替你操作系统本身——比如「打开 Agent Studio」「打开 Agent Hub」「全部休眠」。','嗯，我在。想让我做点什么？可以直接说「系统状态」或「打开总控」试试。'];
   return{text:fl[~~(Math.random()*fl.length)]};
 }
-function avaSend(text){
+function avaRemoteText(data){
+  var v=data&&((data.delta!==undefined&&data.delta)||(data.text!==undefined&&data.text)||(data.content!==undefined&&data.content)||(data.message!==undefined&&data.message)||(data.chunk!==undefined&&data.chunk));
+  if(Array.isArray(v))v=v.map(function(x){return typeof x==='string'?x:(x&&x.text)||''}).join('');
+  return typeof v==='string'?v:'';
+}
+async function avaPrepareRemote(){
+  if(!window.OCTOP||!OCTOP.token)return null;
+  try{
+    if(!OCTOP.online)await OCTOP.health();
+    if(!OCTOP.online)return null;
+    var agents=await OCTOP.listAgents(),match=(agents||[]).find(function(a){return a.name==='AURA 系统助手'||String(a.agent_id||a.id)===String(AVA.remoteAgentId)});
+    if(match)AVA.remoteAgentId=String(match.agent_id||match.id);
+    if(!match){
+      var createdAgent=await OCTOP.createAgent({name:'AURA 系统助手',description:'Agent OS 的常驻系统助手，负责理解用户意图、回答问题，并协助调度桌面 Agent 与工作流。',system_prompt:'你是 AURA，Agent OS 的常驻系统助手。请使用中文回答，语气简洁、可靠、专业。你负责帮助用户理解和使用 Agent OS，解释 Agent、工作区、任务和运行状态；当用户提出需要操作桌面的问题时，先说明建议的操作和风险，再给出清晰步骤。不要假装已经执行了本地桌面操作，也不要捏造工具结果；如果无法访问某个系统能力，明确说明限制。回答优先给结论，再给必要细节。',welcome_message:'你好，我是 AURA，Agent OS 的真实系统助手。你可以直接问我 Agent、任务、工作区和系统使用问题。',config:{agentos_role:'system_assistant',ui_surface:'aura'}});
+      AVA.remoteAgentId=String(createdAgent&&(createdAgent.agent_id||createdAgent.id)||'');
+    }
+    if(!AVA.remoteAgentId)return null;
+    if(AVA.remoteThreadId)return AVA.remoteThreadId;
+    var rows=await OCTOP.listSessions(AVA.remoteAgentId),preferred=(rows||[]).find(function(x){return !x.archived})||null;
+    var created=preferred||await OCTOP.createSession(AVA.remoteAgentId,'aura-desktop-'+Date.now());
+    AVA.remoteThreadId=created&&(created.thread_id||created.threadId||created.id)||null;
+    AVA.remoteReady=!!AVA.remoteThreadId;
+    return AVA.remoteThreadId;
+  }catch(e){AVA.remoteReady=false;return null}
+}
+async function avaRemoteReply(text){
+  var thread=await avaPrepareRemote();
+  if(!thread){avaRemoteFallback(text);return}
+  if(!window.WebSocket){avaRemoteFallback(text);return}
+  var output='',fallbackSent=false;
+  function fallbackOnce(){if(fallbackSent)return;fallbackSent=true;avaRemoteFallback(text)}
+  try{AVA.remoteSocket=new WebSocket(OCTOP.chatUrl(AVA.remoteAgentId))}catch(e){avaRemoteFallback(text);return}
+  var socket=AVA.remoteSocket;
+  socket.onopen=function(){socket.send(JSON.stringify({type:'user_turn',text:text,session_key:thread,thread_id:thread,messages:[{role:'user',content:text}]}))};
+  socket.onmessage=function(event){
+    var data;try{data=JSON.parse(String(event.data))}catch(e){return}
+    if(data.type==='turn_status'||data.type==='hitl_required')return;
+    if(data.type==='error'){output=data.message||'Octop 返回错误';return}
+    output+=avaRemoteText(data);
+    if(data.type==='done'){
+      var reply=output||'Octop 暂未返回内容，请稍后再试。';
+      avaPush({role:'bot',text:reply});try{avaSpeak(reply)}catch(e){}
+      if(AVA.state!=='speaking')setAvaState('idle');socket.close();AVA.remoteSocket=null;
+    }
+  };
+  socket.onerror=function(){if(!output)fallbackOnce();};
+  socket.onclose=function(){AVA.remoteSocket=null;if(!output&&AVA.state==='thinking')fallbackOnce()};
+}
+function avaRemoteFallback(text){
+  var res;try{res=avaRoute(text)}catch(e){res={text:'抱歉，这条指令处理时出了点问题，请换个说法试试。'}}
+  setTimeout(function(){avaPush({role:'bot',text:res.text,card:res.card});try{avaSpeak(res.text)}catch(e){}if(AVA.state!=='speaking')setAvaState('idle')},320);
+}
+async function avaSend(text){
   text=(text||'').trim();if(!text)return;
-  avaPush({role:'user',text:text});
-  setAvaState('thinking');
-  var res;
-  try{res=avaRoute(text)}catch(e){res={text:'抱歉，这条指令处理时出了点问题，请换个说法试试。'}}
-  setTimeout(function(){
-    avaPush({role:'bot',text:res.text,card:res.card});
-    try{avaSpeak(res.text)}catch(e){}
-    if(AVA.state!=='speaking')setAvaState('idle');
-  },420+Math.random()*380);
+  avaPush({role:'user',text:text});setAvaState('thinking');
+  if(await avaPrepareRemote()){avaRemoteReply(text);return}
+  avaRemoteFallback(text);
 }
 function avaListen(){
   if(avaRecActive){try{avaRec.stop()}catch(e){}return}
