@@ -2985,7 +2985,7 @@ var ST_SEED=[
  {key:'doc-analyst',name:'本地文档分析 Agent',version:'0.3.0',goal:'读取本机工作目录文档，提炼要点并自动生成周报',workers:3,resident:true,memory:'/Agent-Space/doc-analyst',perms:{file:true,net:false,shell:false,device:false},expert:'文档分析专家',knowledge:['项目资料库'],skills:['文档摘要','清单生成'],plugins:['PDF 解析'],mcps:['local-file-mcp'],triggers:['手动启动'],outputs:['生成周报.md']},
  {key:'competitor-watch',name:'竞品情报 Agent',version:'0.2.0',goal:'定时监控竞品动态，异常即时预警并输出周简报',workers:4,resident:true,memory:'/Agent-Space/competitor-watch',perms:{file:true,net:true,shell:false,device:false},expert:'竞品情报专家',knowledge:['公司知识库'],skills:['竞品分析','文档摘要'],plugins:[],mcps:['local-file-mcp','cloud-sync-mcp'],triggers:['定时触发','手动启动'],outputs:['情报简报.md','预警推送']}
 ];
-var ST={mode:'bp',bp:ST_SEED[0],nodes:[],edges:[],logs:[],steps:[],idx:0,running:false,paused:false,fused:false,brk:false,tmr:null,deploys:[],proj:0,assetTab:'expert',testResult:null,publish:{checked:false,checks:[],stage:'draft',review:'not_started',error:''}};
+var ST={mode:'bp',bp:ST_SEED[0],nodes:[],edges:[],logs:[],steps:[],idx:0,running:false,paused:false,fused:false,brk:false,tmr:null,deploys:[],proj:0,assetTab:'expert',testResult:null,publish:{checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]}};
 function stAdd(arr,v){if(arr.indexOf(v)<0)arr.push(v);return arr}
 function stParseIntent(t,base){
   var bp;
@@ -3108,7 +3108,7 @@ function stAttachAsset(kind,item,w){
   if(kind==='expert')bp.expert=item.name;
   else if(kind==='knowledge'){bp.knowledge=bp.knowledge||[];stAdd(bp.knowledge,item.name)}
   else {var arr=kind==='skill'?bp.skills:(kind==='plugin'?bp.plugins:bp.mcps);stAdd(arr,item.name)}
-  stBuildNodes(bp);ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:''};renderStudio(w);toast('success','资产已装配',item.name+' 已加入 '+bp.name);
+  stBuildNodes(bp);ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};renderStudio(w);toast('success','资产已装配',item.name+' 已加入 '+bp.name);
 }
 function stManifest(bp){
   return {schema:'agentos.dev/v1',kind:'Agent',metadata:{id:bp.key,name:bp.name,version:bp.version,description:bp.goal},spec:{expert:bp.expert||null,workers:{max:bp.workers,resident:!!bp.resident},permissions:{fileRead:!!bp.perms.file,network:!!bp.perms.net,shell:!!bp.perms.shell,device:!!bp.perms.device},assets:{skills:bp.skills||[],plugins:bp.plugins||[],mcp:bp.mcps||[],knowledge:bp.knowledge||[]},memory:{path:bp.memory},triggers:bp.triggers||[],outputs:bp.outputs||[]}};
@@ -3126,6 +3126,7 @@ function stPublishChecks(bp){
   ];
 }
 function stPublishStageLabel(stage){return ({draft:'草稿',checking:'检查中',ready:'检查通过',review_pending:'审核中',review_approved:'审核通过',creating:'创建 Octop Agent',publishing:'发布 Expert',published:'已发布',failed:'发布失败'})[stage]||'草稿'}
+function stPublishLog(stage,message,level){if(!ST.publish.history)ST.publish.history=[];ST.publish.history.push({stage:stage,message:message,level:level||'info',time:fmtT(new Date())});if(ST.publish.history.length>30)ST.publish.history.shift()}
 function renderStudio(w){
   var q=function(s){return w.el.querySelector(s)};
   Array.prototype.forEach.call(w.el.querySelectorAll('.ec-nav button'),function(b){b.classList.toggle('cur',b.dataset.m===ST.mode)});
@@ -3144,7 +3145,7 @@ function renderStudio(w){
       var btn=main.querySelector(iter?'#st-iter':'#st-gen');
       btn.disabled=true;btn.innerHTML='<i class="ri-loader-4-line spin"></i>AI 解析中';
       setTimeout(function(){
-        ST.bp=stParseIntent(t,iter?ST.bp:null);ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:''};ST.testResult=null;
+        ST.bp=stParseIntent(t,iter?ST.bp:null);ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};ST.testResult=null;
         stBuildNodes(ST.bp);
         renderStudio(w);
         toast('success',iter?'蓝图已按意图更新':'蓝图已生成',ST.bp.name+' · v'+ST.bp.version+' · Worker 上限 '+ST.bp.workers);
@@ -3264,9 +3265,10 @@ function renderStudio(w){
     if(!ST.bp){main.innerHTML='<div class="st-empty"><i class="ri-package-line"></i><div>还没有可发布的蓝图</div></div>'}
     else{
       var sz=(1.8+(ST.bp.skills.length+ST.bp.plugins.length+ST.bp.mcps.length)*.4).toFixed(1),manifest=stManifest(ST.bp);
-      var checks=stPublishChecks(ST.bp),ready=ST.publish.checked&&checks.every(function(x){return x.ok}),stage=ST.publish.stage||'draft',review=ST.publish.review||'not_started';
+      var checks=stPublishChecks(ST.bp),ready=ST.publish.checked&&checks.every(function(x){return x.ok}),stage=ST.publish.stage||'draft',review=ST.publish.review||'not_started',history=ST.publish.history||[];
       main.innerHTML='<div class="st-pub">'+
       '<div class="st-pkg" style="padding:13px 16px"><div style="display:flex;align-items:center;gap:8px"><i class="ri-git-merge-line" style="font-size:17px;color:#8f7bff"></i><div><div style="font-size:12px;font-weight:600">发布流水线 <span class="ec-tag" style="margin-left:5px;color:'+(stage==='failed'?'var(--err)':stage==='published'?'var(--ok)':'var(--accent)')+'">'+stPublishStageLabel(stage)+'</span></div><div style="font-size:10.5px;color:var(--tx3);margin-top:2px">四库依赖与端侧验收必须通过后才能提交 Agent Hub</div></div><button class="btn '+(ready?'':'pri')+'" id="st-check-publish" style="margin-left:auto;padding:6px 11px"><i class="ri-shield-check-line"></i>'+(ready?'重新检查':'运行发布检查')+'</button></div><div class="st-pipeline">'+checks.map(function(x){return '<span class="'+(ST.publish.checked&&x.ok?'ok':'')+'"><i class="'+(ST.publish.checked&&x.ok?'ri-checkbox-circle-line':'ri-time-line')+'"></i> '+x.name+'</span>'}).join('')+'</div>'+(ST.publish.error?'<div style="font-size:10.5px;color:var(--err);margin-top:6px">'+esc(ST.publish.error)+'</div>':'')+'</div>'+
+      '<div class="st-pkg" style="padding:12px 16px"><div style="font-size:11px;font-weight:600;margin-bottom:7px"><i class="ri-file-list-3-line" style="color:var(--accent)"></i> 发布日志</div>'+(history.length?history.slice().reverse().map(function(x){return '<div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-top:1px solid rgba(255,255,255,.05);font-size:10.5px"><i class="'+(x.level==='error'?'ri-error-warning-line':'ri-checkbox-circle-line')+'" style="color:'+(x.level==='error'?'var(--err)':'var(--ok)')+'"></i><span style="color:var(--tx2)">'+esc(x.message)+'</span><span style="margin-left:auto;color:var(--tx3);font:9px var(--mono)">'+esc(x.time)+'</span></div>'}).join(''):'<div style="font-size:10.5px;color:var(--tx3)">暂无发布记录</div>')+'</div>'+
       '<div class="st-pkg"><div class="ph"><div class="mini-tile tg-none" style="--pc:#8f7bff;width:48px;height:48px;border-radius:13px;font-size:23px"><i class="ri-robot-2-line"></i></div>'+
       '<div><div style="font-size:15px;font-weight:600">'+esc(ST.bp.name)+' <span style="font-size:11px;color:var(--tx3);font-family:var(--mono)">v'+ST.bp.version+'</span></div>'+
       '<div style="font-size:11.5px;color:var(--tx3);margin-top:3px">端侧分发包 .aopk · 约 '+sz+' MB · 优先部署本机</div></div></div>'+
@@ -3286,8 +3288,8 @@ function renderStudio(w){
       (ST.deploys.length?ST.deploys.map(function(d){return '<div class="st-dep"><i class="ri-checkbox-circle-line"></i>'+esc(d.name)+' 已部署为独立桌面进程<span class="tm">'+d.t+'</span></div>'}).join('')
       :'<div style="font-size:12px;color:var(--tx3);padding:6px 0 14px">暂无部署记录 · 部署后桌面将自动生成独立图标与 Agent-Space 目录</div>')+
       '</div>';
-      main.querySelector('#st-check-publish').onclick=function(){var result=stPublishChecks(ST.bp),ok=result.every(function(x){return x.ok});ST.publish={checked:true,checks:result,stage:ok?'ready':'draft',review:'not_started',error:ok?'':'仍有检查项未通过'};renderStudio(w);toast(ok?'success':'warn',ok?'发布检查通过':'发布检查未通过',result.filter(function(x){return x.ok}).length+'/'+result.length+' 项检查完成')};
-      main.querySelector('#st-review').onclick=function(){if(!ready){toast('warn','无法提交审核','请先通过所有发布检查');return}ST.publish.review='pending';ST.publish.stage='review_pending';ST.publish.error='';renderStudio(w);toast('info','审核已提交','正在进行 Manifest、权限和四库依赖复核');setTimeout(function(){if(ST.publish.review==='pending'){ST.publish.review='approved';ST.publish.stage='review_approved';renderStudio(w);toast('success','审核通过','现在可以发布到 Agent Hub')}},900)};
+      main.querySelector('#st-check-publish').onclick=function(){var result=stPublishChecks(ST.bp),ok=result.every(function(x){return x.ok});ST.publish={checked:true,checks:result,stage:ok?'ready':'draft',review:'not_started',error:ok?'':'仍有检查项未通过',history:[]};stPublishLog(ok?'ready':'draft',ok?'发布检查通过':'发布检查未通过',ok?'info':'error');renderStudio(w);toast(ok?'success':'warn',ok?'发布检查通过':'发布检查未通过',result.filter(function(x){return x.ok}).length+'/'+result.length+' 项检查完成')};
+      main.querySelector('#st-review').onclick=function(){if(!ready){toast('warn','无法提交审核','请先通过所有发布检查');return}ST.publish.review='pending';ST.publish.stage='review_pending';ST.publish.error='';stPublishLog('review_pending','已提交审核，正在复核 Manifest、权限和四库依赖','info');renderStudio(w);toast('info','审核已提交','正在进行 Manifest、权限和四库依赖复核');setTimeout(function(){if(ST.publish.review==='pending'){ST.publish.review='approved';ST.publish.stage='review_approved';stPublishLog('review_approved','审核通过，可以发布到 Agent Hub','info');renderStudio(w);toast('success','审核通过','现在可以发布到 Agent Hub')}},900)};
       main.querySelector('#st-dep').onclick=function(){
         var bp=ST.bp;
         var p={key:'dep'+Date.now(),name:bp.name,desc:bp.goal,icon:'ri-robot-2-line',color:'#8f7bff',type:'端侧部署',model:'Blueprint v'+bp.version,maxInst:clamp(bp.workers,1,8),status:'stopped',cpuBase:8,memB:.9,id:'p'+Date.now(),pid:PID+=~~rnd(8,40),uptime:0,cpu:0,mem:0,instances:[],errNote:null};
@@ -3309,23 +3311,23 @@ function renderStudio(w){
         var bp=ST.bp;
         if(typeof ECO==='undefined'){toast('warn','生态模块未加载','');return}
         var result=stPublishChecks(bp);
-        if(!ST.publish.checked||!result.every(function(x){return x.ok})){ST.publish={checked:true,checks:result,stage:'draft',review:'not_started',error:'请先完成发布检查'};renderStudio(w);toast('warn','请先通过发布检查','完成四库依赖和端侧验收后才能上传 Agent Hub');return}
+        if(!ST.publish.checked||!result.every(function(x){return x.ok})){ST.publish={checked:true,checks:result,stage:'draft',review:'not_started',error:'请先完成发布检查',history:[]};stPublishLog('draft','发布检查未完成','error');renderStudio(w);toast('warn','请先通过发布检查','完成四库依赖和端侧验收后才能上传 Agent Hub');return}
         if(ST.publish.review!=='approved'){toast('warn','请先提交审核','发布前需要完成审核流程');return}
         if(window.OCTOP&&OCTOP.token&&OCTOP.online){
-          ST.publish={checked:true,checks:result,stage:'creating',error:''};renderStudio(w);
+          ST.publish.checked=true;ST.publish.stage='creating';ST.publish.error='';stPublishLog('creating','开始创建 Octop Agent','info');renderStudio(w);
           var manifest=stManifest(bp);
           OCTOP.createAgent({name:bp.name,description:bp.goal,system_prompt:bp.goal,config:{agentos_manifest:manifest},welcome_message:'你好，我是'+bp.name+'。'}).then(function(created){
             var id=created&&(created.agent_id||created.id);
             if(!id)throw new Error('Octop 未返回 Agent ID');
             bp.octopAgentId=String(id);
-            ST.publish.stage='publishing';renderStudio(w);
+            ST.publish.stage='publishing';stPublishLog('publishing','Octop Agent 创建成功，开始发布 Expert','info');renderStudio(w);
             return OCTOP.publishAgentExpert(id,{name:bp.name,description:bp.goal,slug:bp.key,welcome_message:{zh:'你好，我是'+bp.name+'。',en:'Hi, I am '+bp.name+'.'}}).then(function(published){
-              ST.publish.stage='published';ST.publish.error='';bp.octopExpertId=String(published&&(published.id||published.expert_id)||'');
+              ST.publish.stage='published';ST.publish.error='';stPublishLog('published','Expert 已发布到 Agent Hub','info');bp.octopExpertId=String(published&&(published.id||published.expert_id)||'');
               ECO.publishes.unshift({name:bp.name,kind:'Agent Expert',ver:bp.version,time:fmtT(new Date()),remote:true,id:published&&published.id});
               toast('success','已发布到 Octop Agent Hub','Agent 已创建并生成 Expert 模板');
               renderStudio(w);
             });
-          }).catch(function(e){ST.publish.stage='failed';ST.publish.error=e.message||'Octop 未接受该 Agent';renderStudio(w);toast('error','发布失败',ST.publish.error)});
+          }).catch(function(e){ST.publish.stage='failed';ST.publish.error=e.message||'Octop 未接受该 Agent';stPublishLog('failed',ST.publish.error,'error');renderStudio(w);toast('error','发布失败',ST.publish.error)});
           return;
         }
         ECO.publishes.unshift({name:bp.name,kind:'Agent Blueprint',ver:bp.version,time:fmtT(new Date())});
@@ -3371,7 +3373,7 @@ function stNewProject(w){
     bp.key='agent-'+Date.now().toString(36);bp.name=name;bp.goal=goal;bp.version='0.1.0';bp.memory='/Agent-Space/'+bp.key;
     if(kind==='expert'&&ECO.agents&&ECO.agents[0]){bp.expert=ECO.agents[0].name;bp.skills=bp.skills.length?bp.skills:[].concat(ECO.agents[0].skills||[])}
     if(kind==='hub'&&ECO.agents&&ECO.agents[0]){bp.expert=ECO.agents[0].name;bp.knowledge=['项目资料库']}
-    ST.bp=bp;ST.proj=-1;ST.mode='bp';ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:''};ST.testResult=null;stBuildNodes(bp);mo.close();renderStudio(w);toast('success','Agent 项目已创建',name+' · 下一步可配置 Expert 与四库资产');
+    ST.bp=bp;ST.proj=-1;ST.mode='bp';ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};ST.testResult=null;stBuildNodes(bp);mo.close();renderStudio(w);toast('success','Agent 项目已创建',name+' · 下一步可配置 Expert 与四库资产');
   };
 }
 function buildStudio(w){
