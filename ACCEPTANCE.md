@@ -23,6 +23,8 @@
 19. 点击顶部“专家中心”，确认可以读取 Octop 内置专家模板、查看详情，并通过“创建并打开”生成桌面 Agent 与工作台。
 20. 在专家中心切换到“我的专家”，确认已创建 Agent 可查看状态、启动 / 停止并打开工作台。
 21. 在专家中心切换到“专家市场”，确认可以读取市场卡片、查看能力摘要，并通过“安装并打开”创建桌面 Agent。
+22. 打开 Agent Hub，确认 Agent / Skill / Plugin / MCP 四类目录来自 Octop；Skill 安装调用 Skill Package，Plugin 与 Connector 显示由 Octop 管理的权限边界。
+23. Octop 登录后打开 Agent Hub，确认统一目录聚合和安装适配层可用；任一分目录不可用时，其余目录仍可显示，Desktop 保持离线回退。
 
 ## 配置 LLM Provider 后验收
 

@@ -56,12 +56,66 @@
       this.token = ''; this.online = false; localStorage.removeItem(STORAGE_TOKEN); this._syncIndicator(); window.dispatchEvent(new CustomEvent('octop-disconnected'));
     },
     listAgents: function () { return this.request('/agents'); },
+    createAgent: function (body) { return this.request('/agents', { method: 'POST', body: JSON.stringify(body || {}) }); },
+    publishAgentExpert: function (id, body) { return this.request('/agents/' + encodeURIComponent(id) + '/publish-expert', { method: 'POST', body: JSON.stringify(body || {}) }); },
     listExperts: function () { return this.request('/experts'); },
     expert: function (id) { return this.request('/experts/' + encodeURIComponent(id)); },
     createAgentFromExpert: function (id, body) { return this.request('/agents/from-expert/' + encodeURIComponent(id), { method: 'POST', body: JSON.stringify(body || {}) }); },
     listExpertHub: function (query) { var qs = query ? '?' + new URLSearchParams(query).toString() : ''; return this.request('/experts/hub' + qs); },
     expertHub: function (slug) { return this.request('/experts/hub/' + encodeURIComponent(slug)); },
     installExpertHub: function (slug, body) { return this.request('/experts/hub/' + encodeURIComponent(slug) + '/install', { method: 'POST', body: JSON.stringify(body || {}) }); },
+    skillHubSearch: function (query, limit) { return this.request('/skill-packages/hub/search?q=' + encodeURIComponent(query || '') + '&limit=' + (limit || 50)); },
+    createSkillPackageFromHub: function (body) { return this.request('/skill-packages/from-skillhub', { method: 'POST', body: JSON.stringify(body || {}) }); },
+    listSkillPackages: function () { return this.request('/skill-packages'); },
+    listPlugins: function () { return this.request('/plugins'); },
+    connectorCatalog: function () { return this.request('/connectors/catalog'); },
+    connectorInstances: function () { return this.request('/connector-instances'); },
+    hubCatalog: async function (query) {
+      query = query || {};
+      var q = query.q || '', limit = query.limit || 50;
+      try {
+        return await this.request('/hub/catalog?q=' + encodeURIComponent(q) + '&scene=' + encodeURIComponent(query.scene || ''));
+      } catch (unifiedError) {
+        /* Older Octop versions do not expose /hub yet; keep the compatible fan-out. */
+      }
+      var results = await Promise.all([
+        this.listExpertHub({ q: q, scene: query.scene || '' }),
+        this.skillHubSearch(q, limit),
+        this.listPlugins(),
+        this.connectorCatalog()
+      ].map(function (task) { return task.catch(function () { return null; }); }));
+      return {
+        experts: (results[0] && results[0].items) || [],
+        scenes: (results[0] && results[0].scenes) || [],
+        skills: Array.isArray(results[1]) ? results[1] : [],
+        plugins: Array.isArray(results[2]) ? results[2] : [],
+        connectors: Array.isArray(results[3]) ? results[3] : [],
+        updatedAt: Date.now()
+      };
+    },
+    hubInstalled: async function () {
+      try { return await this.request('/hub/installed'); } catch (unifiedError) {}
+      var results = await Promise.all([
+        this.listAgents(),
+        this.listSkillPackages(),
+        this.listPlugins(),
+        this.connectorInstances()
+      ]);
+      return {
+        agents: Array.isArray(results[0]) ? results[0] : [],
+        skillPackages: Array.isArray(results[1]) ? results[1] : [],
+        plugins: Array.isArray(results[2]) ? results[2].filter(function (x) { return x.enabled || x.loaded; }) : [],
+        connectors: Array.isArray(results[3]) ? results[3] : [],
+        updatedAt: Date.now()
+      };
+    },
+    hubInstall: async function (kind, item, options) {
+      options = options || {};
+      if (kind === 'expert') return this.installExpertHub(item.slug || item.id, { name: options.name || item.name || item.label, description: options.description || item.description || '', enable_trajectory: true });
+      if (kind === 'skill') return this.createSkillPackageFromHub({ slug: item.slug || item.id, name: options.name || item.name, description: options.description || item.description || item.summary || '', icon_url: item.icon_url || null });
+      if (kind === 'plugin' || kind === 'connector' || kind === 'mcp') throw new Error('该资产由 Octop 管理端完成安装与授权');
+      throw new Error('不支持的生态资产类型：' + kind);
+    },
     listSessions: function (id) { return this.request('/agents/' + encodeURIComponent(id) + '/threads'); },
     listCron: function (id) { return this.request('/agents/' + encodeURIComponent(id) + '/cron'); },
     patchCron: function (agentId, cronId, patch) { return this.request('/agents/' + encodeURIComponent(agentId) + '/cron/' + encodeURIComponent(cronId), { method: 'PATCH', body: JSON.stringify(patch) }); },

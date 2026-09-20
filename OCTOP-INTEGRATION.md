@@ -1,6 +1,6 @@
 # Octop 后端对接
 
-AgentOS Desktop 通过 `octop-client.js` 对接 [TencentCloud/Octop](https://github.com/TencentCloud/Octop)。桌面端默认访问 `http://127.0.0.1:8088`，并保持离线可用：Octop 未启动时，当前演示数据继续显示；Octop 可用后，网络状态面板会显示 API 连接状态。
+AgentOS Desktop 通过 `octop-client.js` 对接 [TencentCloud/Octop](https://github.com/TencentCloud/Octop)。桌面端默认访问 `http://127.0.0.1:8088`，并保持离线可用：Octop 未启动时，当前演示数据继续显示；Octop 可用后，网络状态面板会显示 API 连接状态。当前 Desktop 已提供统一 `hubCatalog / hubInstalled / hubInstall` 适配层，后续可平滑切换到 Octop 原生 `/api/hub` 聚合路由。
 
 当前适配以运行中的 Octop 源码接口为准：健康响应兼容 `ok: true` 与 `status: "ok"`，Agent 路由优先使用返回的 `agent_id`，线程接口使用 `/threads`。
 
@@ -41,6 +41,15 @@ const socket = new WebSocket(OCTOP.chatUrl(agents[0].id))
 | 从专家模板创建 Agent | `POST /api/agents/from-expert/{expert_id}` |
 | 专家市场 | `GET /api/experts/hub` / `GET /api/experts/hub/{slug}` |
 | 安装市场专家 | `POST /api/experts/hub/{slug}/install` |
+| SkillHub 搜索 | `GET /api/skill-packages/hub/search?q=…&limit=…` |
+| 从 SkillHub 创建 Skill Package | `POST /api/skill-packages/from-skillhub` |
+| Plugin 目录 | `GET /api/plugins` |
+| Connector / MCP 目录 | `GET /api/connectors/catalog` |
+| Desktop 统一生态目录 | Desktop `OCTOP.hubCatalog()` 聚合 Expert / Skill / Plugin / Connector |
+| Desktop 统一安装 | Desktop `OCTOP.hubInstall(kind, item)` 路由到 Octop 对应安装接口 |
+| Octop 统一生态目录 | `GET /api/hub/catalog` |
+| Octop 已安装资产 | `GET /api/hub/installed` |
+| Octop 统一安装入口 | `POST /api/hub/install`（expert / skill；Plugin / Connector 由原生管理流负责） |
 | 进程状态 | `GET /api/agents/{id}/status` |
 | Agent 工作窗口欢迎语 | `GET /api/agents/{id}/chat/welcome`（读取 `welcome_message`） |
 | 会话列表 / 新建会话 | `GET/POST /api/agents/{id}/threads` |
