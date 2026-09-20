@@ -3359,6 +3359,7 @@ function renderStudio(w){
       '<button class="btn" id="st-exp"><i class="ri-download-2-line"></i>导出 .aopk 包</button>'+
       '<button class="btn '+(ready&&review!=='approved'?'pri':'')+'" id="st-review" '+(!ready||review==='approved'?'disabled':'')+'><i class="ri-shield-check-line"></i>'+(review==='approved'?'审核已通过':review==='pending'?'审核中':'提交审核')+'</button>'+
       '<button class="btn" id="st-up"><i class="ri-upload-2-line"></i>上传 Agent Hub</button>'+
+      (stage==='failed'?'<button class="btn pri" id="st-retry"><i class="ri-refresh-line"></i>重试发布</button>':'')+
       (stage==='published'?'<button class="btn danger" id="st-stop"><i class="ri-stop-circle-line"></i>停止发布</button>':stage==='stopped'?'<button class="btn" disabled><i class="ri-stop-circle-line"></i>已停止发布</button>':'')+
       '</div></div>'+
       '<div style="font-size:11px;color:var(--tx3);letter-spacing:.06em;margin:4px 0 8px">部署记录</div>'+
@@ -3381,6 +3382,8 @@ function renderStudio(w){
           renderStudio(w);toast('success','已停止发布','Expert 已从 Agent Hub 下架，版本仍保留在本地');
         }).catch(function(e){stopBtn.disabled=false;stopBtn.innerHTML='<i class="ri-stop-circle-line"></i>停止发布';toast('error','停止发布失败',e.message||'Octop 未接受该操作')});
       };
+      var retryBtn=main.querySelector('#st-retry');
+      if(retryBtn)retryBtn.onclick=function(){if(!window.OCTOP||!OCTOP.token||!OCTOP.online){toast('warn','需要连接 Octop','发布失败重试需要先连接 Octop');return}ST.publish.review='approved';ST.publish.stage='review_approved';ST.publish.error='';stPublishLog('retry','从失败阶段恢复发布','info');renderStudio(w);main.querySelector('#st-up').click()};
       main.querySelector('#st-review').onclick=function(){if(!ready){toast('warn','无法提交审核','请先通过所有发布检查');return}ST.publish.review='pending';ST.publish.stage='review_pending';ST.publish.error='';stPublishLog('review_pending','已提交审核，正在复核 Manifest、权限和四库依赖','info');renderStudio(w);toast('info','审核已提交','正在进行 Manifest、权限和四库依赖复核');setTimeout(function(){if(ST.publish.review==='pending'){ST.publish.review='approved';ST.publish.stage='review_approved';stPublishLog('review_approved','审核通过，可以发布到 Agent Hub','info');renderStudio(w);toast('success','审核通过','现在可以发布到 Agent Hub')}},900)};
       main.querySelector('#st-dep').onclick=function(){
         var bp=ST.bp;
@@ -3408,7 +3411,8 @@ function renderStudio(w){
         if(window.OCTOP&&OCTOP.token&&OCTOP.online){
           ST.publish.checked=true;ST.publish.stage='creating';ST.publish.error='';stPublishLog('creating','开始创建 Octop Agent','info');renderStudio(w);
           var manifest=stManifest(bp);
-          OCTOP.createAgent({name:bp.name,description:bp.goal,system_prompt:bp.goal,config:{agentos_manifest:manifest},welcome_message:'你好，我是'+bp.name+'。'}).then(function(created){
+          var createTask=bp.octopAgentId?Promise.resolve({id:bp.octopAgentId,agent_id:bp.octopAgentId}):OCTOP.createAgent({name:bp.name,description:bp.goal,system_prompt:bp.goal,config:{agentos_manifest:manifest},welcome_message:'你好，我是'+bp.name+'。'});
+          createTask.then(function(created){
             var id=created&&(created.agent_id||created.id);
             if(!id)throw new Error('Octop 未返回 Agent ID');
             bp.octopAgentId=String(id);
