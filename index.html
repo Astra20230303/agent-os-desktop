@@ -1281,7 +1281,8 @@ function syncOctopAgents(){
       var rid=String(a.agent_id||a.id||i), state=a.state==='active'?'running':(a.state||'running');
       if(['running','sleeping','stopped','error'].indexOf(state)<0)state='running';
       var remoteIcon=a.icon_name||a.icon||'';
-      return {id:'octop-'+rid,octopId:rid,remote:true,key:'octop-'+rid,name:a.name||a.agent_id||('Octop Agent '+(i+1)),desc:a.description||'由 Octop 后端托管的智能体',icon:/^ri-/.test(remoteIcon)?remoteIcon:'ri-sparkling-2-line',color:a.color||palette[i%palette.length],type:'Octop Agent',model:a.default_model||'Octop Runtime',maxInst:6,status:state,cpuBase:0,memB:0,cpu:0,mem:0,instances:[],pid:a.pid||'Octop',uptime:0,unreadCount:a.unread_count||0,expertId:a.template_name||a.expert_id||''};
+      var hubKey=a.template_name||a.expert_id||'';
+      return {id:'octop-'+rid,octopId:rid,remote:true,hubKey:hubKey,key:'octop-'+rid,name:a.name||a.agent_id||('Octop Agent '+(i+1)),desc:a.description||'由 Octop 后端托管的智能体',icon:/^ri-/.test(remoteIcon)?remoteIcon:'ri-sparkling-2-line',color:a.color||palette[i%palette.length],type:'Octop Agent',model:a.default_model||'Octop Runtime',maxInst:6,status:state,cpuBase:0,memB:0,cpu:0,mem:0,instances:[],pid:a.pid||'Octop',uptime:0,unreadCount:a.unread_count||0,expertId:hubKey};
     });
     S.procs=SYS_APPS.map(function(s,i){var p={};for(var k in s)p[k]=s[k];p.id='sys'+i;p.pid=PID+=~~rnd(8,40);p.uptime=~~rnd(86400,86400*30);p.cpu=s.cpuBase;p.mem=s.memB;p.instances=[];p.errNote=null;return p}).concat(agents);
     renderIcons();renderPins();updateDockTabs();updStatusbar();
@@ -3601,6 +3602,15 @@ function syncHubCatalog(){
     return true;
   });
 }
+function syncHubInstalled(){
+  if(!window.OCTOP||!OCTOP.token)return Promise.resolve(false);
+  return OCTOP.hubInstalled().then(function(installed){
+    if(!installed)return false;
+    var packages=installed.skillPackages||[];
+    packages.forEach(function(pkg){var raw=pkg.slug||pkg.name||pkg.id,source=(ECO.skills||[]).find(function(x){return x.key===raw||x.slug===raw||x.name===raw}),key=source?source.key:raw;if(key&&ECO.installed.skills.indexOf(key)<0)ECO.installed.skills.push(key)});
+    return syncOctopAgents();
+  }).catch(function(){return false});
+}
 function hubIsInst(kind,key){if(ECO.installed[kind].indexOf(key)>=0)return true;var source=(ECO[kind]||[]).find(function(x){return x.key===key});return !!(source&&source.installed)}
 function hubInstallAsset(kind,key,done){
   var source=(ECO[kind]||[]).find(function(x){return x.key===key});
@@ -3658,8 +3668,8 @@ function renderHub(w){
   if(HUB.tab==='agents'){
     var list=ECO.agents.filter(match);
     grid.innerHTML=list.length?list.map(function(a){
-      var inst=S.procs.some(function(p){return p.hubKey===a.key});
-      var mineP=null;S.procs.forEach(function(p){if(p.hubKey===a.key)mineP=p});
+      var inst=S.procs.some(function(p){return p.hubKey===a.key||p.expertId===a.key||p.expertId===a.slug});
+      var mineP=null;S.procs.forEach(function(p){if(p.hubKey===a.key||p.expertId===a.key||p.expertId===a.slug)mineP=p});
       return '<div class="hb-card"><div class="h"><div class="mini-tile'+tileCls(a.color)+'" style="--pc:'+a.color+';width:42px;height:42px;border-radius:12px;font-size:20px"><i class="'+a.icon+'"></i></div>'+
       '<div><div class="nm">'+esc(a.name)+(a.mine?'<span class="mine">我发布的</span>':'')+'</div><div class="au">'+esc(a.author)+' · v'+a.ver+' · '+a.type+'</div></div></div>'+
       '<div class="ds">'+esc(a.desc)+'</div>'+
@@ -3780,7 +3790,7 @@ function buildHub(w){
     }
   });
   renderHub(w);
-  syncHubCatalog().then(function(ok){if(ok&&w.el.isConnected){renderHub(w);toast('success','Agent Hub 已同步','专家、Skill、Plugin 与 Connector 目录来自 Octop')}});
+  syncHubCatalog().then(function(ok){return syncHubInstalled().then(function(){if(ok&&w.el.isConnected){renderHub(w);toast('success','Agent Hub 已同步','专家、Skill、Plugin 与 Connector 目录来自 Octop')}})});
 }
 function openHub(fromEl){
   WM.open({id:'app:hub',kind:'hub',title:'Agent Hub · 统一生态市场',w:1120,h:700,x:innerWidth/2-560,y:56,fromEl:fromEl,build:buildHub});
