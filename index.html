@@ -3672,11 +3672,18 @@ function renderBuilder(w){
       try{renderIcons(true);updStatusbar()}catch(err){}
       toast('success','Workforce Agent 已部署','「'+p.name+'」已注册为独立进程 · 双击图标即可启动');
     };
-    pv.querySelector('#wb-up').onclick=function(){
+    pv.querySelector('#wb-up').onclick=async function(){
       if(typeof ECO==='undefined'){toast('warn','生态模块未加载','');return}
-      ECO.publishes.unshift({name:WFB.name||WFB.tpl.name,kind:'Workforce Agent',ver:'1.0.0',time:fmtT(new Date())});
-      ECO.agents.unshift({key:'mine'+Date.now(),name:WFB.name||WFB.tpl.name,author:'本机 · 我',mine:true,type:'Workforce Agent',ver:'1.0.0',rating:'—',dl:'0',size:'~3 MB',color:WFB.tpl.color,icon:WFB.tpl.icon,desc:WFB.intro||WFB.tpl.intro,perms:[['文件读取（知识库）',WFB.perms.file?1:0],['网络检索',WFB.perms.net?1:0],['Shell 执行',0]]});
-      toast('success','已上传 Agent Hub','「'+(WFB.name||WFB.tpl.name)+'」已上架 Workforce 分区');
+      if(!window.OCTOP||!OCTOP.token||!OCTOP.online){toast('info','已保存本地 Workforce 草稿','Octop 未连接，未提交 Agent Hub；连接后再上架');return}
+      var name=WFB.name||WFB.tpl.name,btn=this;btn.disabled=true;btn.innerHTML='<i class="ri-loader-4-line spin"></i>上架中';
+      try{
+        var created=await OCTOP.createAgent({name:name,description:WFB.intro||WFB.tpl.intro,system_prompt:WFB.intro||WFB.tpl.intro,config:{workforce_flow:WFB.flow,permissions:{file:!!WFB.perms.file,net:!!WFB.perms.net}},welcome_message:'你好，我是'+name+'。'});
+        var id=created&&(created.agent_id||created.id);if(!id)throw new Error('Octop 未返回 Agent ID');
+        var published=await OCTOP.publishAgentExpert(id,{name:name,description:WFB.intro||WFB.tpl.intro,slug:'workforce-'+Date.now().toString(36),welcome_message:{zh:'你好，我是'+name+'。',en:'Hi, I am '+name+'.'}});
+        ECO.publishes.unshift({name:name,kind:'Workforce Agent',ver:'1.0.0',time:fmtT(new Date()),remote:true,id:published&&published.id});
+        ECO.agents.unshift({key:'mine'+Date.now(),name:name,author:'本机 · 我',mine:true,type:'Workforce Agent',ver:'1.0.0',rating:'—',dl:'0',size:'~3 MB',color:WFB.tpl.color,icon:WFB.tpl.icon,desc:WFB.intro||WFB.tpl.intro,perms:[['文件读取（知识库）',WFB.perms.file?1:0],['网络检索',WFB.perms.net?1:0],['Shell 执行',0]]});
+        toast('success','已发布到 Agent Hub','「'+name+'」已创建并上架 Workforce 分区');
+      }catch(e){toast('error','Workforce 发布失败',e.message||'Octop 未接受该 Agent')}finally{btn.disabled=false;btn.innerHTML='<i class="ri-upload-2-line"></i>上架 Hub'}
     };
   }
 }
