@@ -3209,7 +3209,7 @@ function stPublishChecks(bp){
     {key:'test',name:'端侧验收',ok:!!ST.testResult}
   ];
 }
-function stPublishStageLabel(stage){return ({draft:'草稿',checking:'检查中',ready:'检查通过',review_pending:'审核中',review_approved:'审核通过',creating:'创建 Octop Agent',publishing:'发布 Expert',published:'已发布',stopped:'已停止发布',failed:'发布失败'})[stage]||'草稿'}
+function stPublishStageLabel(stage){return ({draft:'草稿',checking:'检查中',ready:'检查通过',review_pending:'审核中',review_approved:'审核通过',creating:'创建 Octop Agent',publishing:'发布 Expert',published:'已发布',stopped:'已停止发布',offline:'离线本地包',failed:'发布失败'})[stage]||'草稿'}
 function stPublishLog(stage,message,level){if(!ST.publish.history)ST.publish.history=[];ST.publish.history.push({stage:stage,message:message,level:level||'info',time:fmtT(new Date())});if(ST.publish.history.length>30)ST.publish.history.shift()}
 function stRecordVersion(bp,status){var snap={version:bp.version,name:bp.name,time:fmtT(new Date()),status:status||'published',manifest:stManifest(bp),blueprint:JSON.parse(JSON.stringify(bp))};ST.versions=ST.versions.filter(function(x){return x.version!==snap.version});ST.versions.unshift(snap);return snap}
 function stVersionDiff(a,b){if(!a||!b)return[];var out=[];if(a.version!==b.version)out.push(['版本',a.version+' → '+b.version]);if(a.goal!==b.goal)out.push(['业务目标',a.goal+' → '+b.goal]);if(a.expert!==b.expert)out.push(['Expert',String(a.expert||'未绑定')+' → '+String(b.expert||'未绑定')]);[['skills','Skill'],['plugins','Plugin'],['mcps','MCP'],['knowledge','Knowledge']].forEach(function(pair){var x=(a[pair[0]]||[]).join('、'),y=(b[pair[0]]||[]).join('、');if(x!==y)out.push([pair[1],(x||'无')+' → '+(y||'无')])});return out}
@@ -3444,10 +3444,8 @@ function renderStudio(w){
           }).catch(function(e){var failedStage=ST.publish.stage;ST.publish.stage='failed';ST.publish.failedStage=failedStage;ST.publish.error=e.message||'Octop 未接受该 Agent';stPublishLog('failed',failedStage+' · '+ST.publish.error,'error');renderStudio(w);toast('error','发布失败',ST.publish.error)});
           return;
         }
-        ECO.publishes.unshift({name:bp.name,kind:'Agent Blueprint',ver:bp.version,time:fmtT(new Date())});
-        stRecordVersion(bp,'local');
-        ECO.agents.unshift({key:'mine'+Date.now(),name:bp.name,author:'本机 · 我',mine:true,type:'通用 Agent',ver:bp.version,rating:'—',dl:'0',size:'~2 MB',color:'#8f7bff',icon:'ri-robot-2-line',desc:bp.goal,perms:[['文件读取',bp.perms.file?1:0],['网络访问',bp.perms.net?1:0],['Shell 执行',bp.perms.shell?1:0]]});
-        toast('success','已上传 Agent Hub','「'+bp.name+'」已上架 · 可在 Agent Hub · 我的发布 查看');
+        ST.publish.stage='offline';ST.publish.error='';stPublishLog('offline','离线模式：已保存本地发布包，未提交 Agent Hub','info');stRecordVersion(bp,'local');
+        toast('info','已保存本地发布包','Octop 未连接，未提交远程 Agent Hub；连接后可重新执行发布');
         renderStudio(w);
       };
     }
