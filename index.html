@@ -3810,6 +3810,7 @@ function hubPermModal(a,w){
   mo.foot.append(no,ok);
 }
 function renderHub(w){
+  (ECO.submissions||[]).filter(function(s){return s.status==='approved'}).forEach(function(s){hubPublishSubmission(s)});
   var q=function(s){return w.el.querySelector(s)};
   Array.prototype.forEach.call(w.el.querySelectorAll('[data-tab]'),function(b){
     var n=b.dataset.tab;
