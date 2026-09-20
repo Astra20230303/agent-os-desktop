@@ -3052,7 +3052,9 @@ var ST_SEED=[
 ];
 var ST={mode:'bp',bp:ST_SEED[0],nodes:[],edges:[],logs:[],steps:[],idx:0,running:false,paused:false,fused:false,brk:false,tmr:null,deploys:[],proj:0,assetTab:'expert',testResult:null,versions:[],publish:{checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]}};
 try{ST.projects=JSON.parse(localStorage.getItem('aos.studio.projects')||'null')||JSON.parse(JSON.stringify(ST_SEED))}catch(e){ST.projects=JSON.parse(JSON.stringify(ST_SEED))}
-function stSaveProject(){if(!ST.bp||!ST.projects)return;var i=ST.projects.findIndex(function(x){return x.key===ST.bp.key});if(i<0){ST.projects.push(JSON.parse(JSON.stringify(ST.bp)))}else{ST.projects[i]=JSON.parse(JSON.stringify(ST.bp))}try{localStorage.setItem('aos.studio.projects',JSON.stringify(ST.projects))}catch(e){}}
+function stLoadProjectState(p){p=p||{};ST.versions=JSON.parse(JSON.stringify(p.studioVersions||[]));ST.publish=JSON.parse(JSON.stringify(p.studioPublish||{checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]}));ST.testResult=p.studioTestResult||null}
+function stSaveProject(){if(!ST.bp||!ST.projects)return;var snapshot=JSON.parse(JSON.stringify(ST.bp));snapshot.studioVersions=JSON.parse(JSON.stringify(ST.versions||[]));snapshot.studioPublish=JSON.parse(JSON.stringify(ST.publish||{}));snapshot.studioTestResult=ST.testResult||null;var i=ST.projects.findIndex(function(x){return x.key===ST.bp.key});if(i<0){ST.projects.push(snapshot)}else{ST.projects[i]=snapshot}try{localStorage.setItem('aos.studio.projects',JSON.stringify(ST.projects))}catch(e){}}
+stLoadProjectState(ST.projects[0]);
 function stAdd(arr,v){if(arr.indexOf(v)<0)arr.push(v);return arr}
 function stParseIntent(t,base){
   var bp;
@@ -3498,7 +3500,7 @@ function buildStudio(w){
     var b=e.target.closest('[data-m]');if(b){ST.mode=b.dataset.m;renderStudio(w);return}
     var p=e.target.closest('[data-proj]');if(!p)return;
     if(p.dataset.proj==='new'){stNewProject(w);return}
-    else{ST.proj=+p.dataset.proj;ST.bp=JSON.parse(JSON.stringify(ST.projects[ST.proj]));ST.versions=[];ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};stBuildNodes(ST.bp)}
+    else{ST.proj=+p.dataset.proj;ST.bp=JSON.parse(JSON.stringify(ST.projects[ST.proj]));delete ST.bp.studioVersions;delete ST.bp.studioPublish;delete ST.bp.studioTestResult;stLoadProjectState(ST.projects[ST.proj]);stBuildNodes(ST.bp)}
     renderStudio(w);
   });
   renderStudio(w);
