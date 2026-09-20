@@ -3462,16 +3462,16 @@ function renderStudio(w){
 }
 function stNewProject(w){
   var mo=openModal({title:'新建 Agent 项目',width:560});
-  mo.body.innerHTML='<div style="font-size:11.5px;color:var(--tx2);line-height:1.7;margin-bottom:14px">从业务目标开始创建一个可测试、可发布的 Agent 项目。后续可在 Studio 中继续装配四库资产。</div><label class="field"><span>创建方式</span><select id="st-new-kind"><option value="blank">空白 Agent</option><option value="expert">从 Expert 创建</option><option value="hub">从 Agent Hub 导入</option></select></label><label class="field"><span>Agent 名称</span><input id="st-new-name" placeholder="例如：销售线索分析 Agent" maxlength="64"></label><label class="field"><span>业务目标</span><textarea id="st-new-goal" placeholder="描述 Agent 要解决的业务问题、输入和输出" maxlength="300" style="height:78px;resize:vertical"></textarea></label><div id="st-new-error" style="color:var(--err);font-size:11px;min-height:18px;margin-top:5px"></div>';
+  mo.body.innerHTML='<div style="font-size:11.5px;color:var(--tx2);line-height:1.7;margin-bottom:14px">从业务目标开始创建一个可测试、可发布的 Agent 项目。后续可在 Studio 中继续装配四库资产。</div><label class="field"><span>创建方式</span><select id="st-new-kind"><option value="blank">空白 Agent</option><option value="expert">从 Expert 创建</option><option value="hub">从 Agent Hub 导入</option></select></label><label class="field"><span>来源资产</span><select id="st-new-source"><option value="">不绑定来源</option>'+(ECO.agents||[]).map(function(a){return '<option value="'+esc(a.key)+'">'+esc(a.name)+' · '+esc(a.type||'Agent')+'</option>'}).join('')+'</select></label><label class="field"><span>Agent 名称</span><input id="st-new-name" placeholder="例如：销售线索分析 Agent" maxlength="64"></label><label class="field"><span>业务目标</span><textarea id="st-new-goal" placeholder="描述 Agent 要解决的业务问题、输入和输出" maxlength="300" style="height:78px;resize:vertical"></textarea></label><div id="st-new-error" style="color:var(--err);font-size:11px;min-height:18px;margin-top:5px"></div>';
   mo.foot.append(el('<button class="btn">取消</button>'),el('<button class="btn pri"><i class="ri-add-line"></i>创建项目</button>'));
   mo.foot.querySelector('.btn').onclick=mo.close;
   mo.foot.querySelector('.btn.pri').onclick=function(){
-    var name=mo.body.querySelector('#st-new-name').value.trim(),goal=mo.body.querySelector('#st-new-goal').value.trim(),err=mo.body.querySelector('#st-new-error');
+    var name=mo.body.querySelector('#st-new-name').value.trim(),goal=mo.body.querySelector('#st-new-goal').value.trim(),sourceKey=mo.body.querySelector('#st-new-source').value,err=mo.body.querySelector('#st-new-error');
     if(!name||!goal){err.textContent='请填写 Agent 名称和业务目标';return}
     var kind=mo.body.querySelector('#st-new-kind').value,bp=stParseIntent(goal,null);
     bp.key='agent-'+Date.now().toString(36);bp.name=name;bp.goal=goal;bp.version='0.1.0';bp.memory='/Agent-Space/'+bp.key;
-    if(kind==='expert'&&ECO.agents&&ECO.agents[0]){bp.expert=ECO.agents[0].name;bp.skills=bp.skills.length?bp.skills:[].concat(ECO.agents[0].skills||[])}
-    if(kind==='hub'&&ECO.agents&&ECO.agents[0]){bp.expert=ECO.agents[0].name;bp.knowledge=['项目资料库']}
+    var source=(ECO.agents||[]).find(function(a){return a.key===sourceKey})||null;
+    if((kind==='expert'||kind==='hub')&&source){bp.expert=source.name;bp.sourceAgentKey=source.key;bp.knowledge=kind==='hub'?['项目资料库']:bp.knowledge}
     ST.bp=bp;ST.proj=ST.projects.length;ST.mode='bp';ST.versions=[];ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};ST.testResult=null;stBuildNodes(bp);mo.close();renderStudio(w);toast('success','Agent 项目已创建',name+' · 下一步可配置 Expert 与四库资产');
   };
 }
