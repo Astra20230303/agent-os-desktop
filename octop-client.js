@@ -58,6 +58,7 @@
     listAgents: function () { return this.request('/agents'); },
     createAgent: function (body) { return this.request('/agents', { method: 'POST', body: JSON.stringify(body || {}) }); },
     publishAgentExpert: function (id, body) { return this.request('/agents/' + encodeURIComponent(id) + '/publish-expert', { method: 'POST', body: JSON.stringify(body || {}) }); },
+    unpublishExpert: function (id) { return this.request('/experts/published/' + encodeURIComponent(id), { method: 'DELETE' }); },
     listExperts: function () { return this.request('/experts'); },
     expert: function (id) { return this.request('/experts/' + encodeURIComponent(id)); },
     createAgentFromExpert: function (id, body) { return this.request('/agents/from-expert/' + encodeURIComponent(id), { method: 'POST', body: JSON.stringify(body || {}) }); },
