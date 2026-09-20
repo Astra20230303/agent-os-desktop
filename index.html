@@ -3102,6 +3102,8 @@ function stYAML(bp){
   L.push(['# spec',null]);
   L.push(['  goal',bp.goal]);
   L.push(['  expert',bp.expert||'未绑定']);
+  if(bp.expertPrompt)L.push(['  expertPrompt',bp.expertPrompt]);
+  if(bp.workflow)L.push(['  workflow',JSON.stringify(bp.workflow)]);
   L.push(['  workers','{ max: '+bp.workers+', resident: '+bp.resident+' }']);
   L.push(['# permissions',null]);
   L.push(['  file.read',bp.perms.file]);
@@ -3180,7 +3182,7 @@ function stAttachAsset(kind,item,w){
   stBuildNodes(bp);ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};renderStudio(w);toast('success','资产已装配',item.name+' 已加入 '+bp.name);
 }
 function stManifest(bp){
-  return {schema:'agentos.dev/v1',kind:'Agent',metadata:{id:bp.key,name:bp.name,version:bp.version,description:bp.goal},spec:{expert:bp.expert||null,workers:{max:bp.workers,resident:!!bp.resident},permissions:{fileRead:!!bp.perms.file,network:!!bp.perms.net,shell:!!bp.perms.shell,device:!!bp.perms.device},assets:{skills:bp.skills||[],plugins:bp.plugins||[],mcp:bp.mcps||[],knowledge:bp.knowledge||[]},memory:{path:bp.memory},triggers:bp.triggers||[],outputs:bp.outputs||[]}};
+  return {schema:'agentos.dev/v1',kind:'Agent',metadata:{id:bp.key,name:bp.name,version:bp.version,description:bp.goal},spec:{expert:bp.expert||null,expertPrompt:bp.expertPrompt||null,workflow:bp.workflow||null,workers:{max:bp.workers,resident:!!bp.resident},permissions:{fileRead:!!bp.perms.file,network:!!bp.perms.net,shell:!!bp.perms.shell,device:!!bp.perms.device},assets:{skills:bp.skills||[],plugins:bp.plugins||[],mcp:bp.mcps||[],knowledge:bp.knowledge||[]},memory:{path:bp.memory},triggers:bp.triggers||[],outputs:bp.outputs||[]}};
 }
 function stPublishChecks(bp){
   if(!bp)return [];
@@ -3473,7 +3475,7 @@ function stNewProject(w){
     var kind=mo.body.querySelector('#st-new-kind').value,bp=stParseIntent(goal,null);
     bp.key='agent-'+Date.now().toString(36);bp.name=name;bp.goal=goal;bp.version='0.1.0';bp.memory='/Agent-Space/'+bp.key;
     var source=(ECO.agents||[]).find(function(a){return a.key===sourceKey})||null;
-    if((kind==='expert'||kind==='hub')&&source){bp.expert=source.name;bp.sourceAgentKey=source.key;bp.knowledge=kind==='hub'?['项目资料库']:bp.knowledge}
+    if((kind==='expert'||kind==='hub')&&source){bp.expert=source.name;bp.sourceAgentKey=source.key;bp.expertPrompt=source.prompt||source.system_prompt||source.desc||'';bp.workflow=source.workflow||{triggers:bp.triggers.slice(),outputs:bp.outputs.slice()};bp.knowledge=kind==='hub'?['项目资料库']:bp.knowledge}
     ST.bp=bp;ST.proj=ST.projects.length;ST.mode='bp';ST.versions=[];ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};ST.testResult=null;stBuildNodes(bp);mo.close();renderStudio(w);toast('success','Agent 项目已创建',name+' · 下一步可配置 Expert 与四库资产');
   };
 }
