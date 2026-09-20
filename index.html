@@ -3431,8 +3431,9 @@ function renderStudio(w){
             var id=created&&(created.agent_id||created.id);
             if(!id)throw new Error('Octop 未返回 Agent ID');
             bp.octopAgentId=String(id);
-            ST.publish.stage='publishing';stPublishLog('publishing','Octop Agent 创建成功，开始发布 Expert','info');renderStudio(w);
-            return OCTOP.publishAgentExpert(id,{name:bp.name,description:bp.goal,slug:bp.key,welcome_message:{zh:'你好，我是'+bp.name+'。',en:'Hi, I am '+bp.name+'.'}}).then(function(published){
+            ST.publish.stage='publishing';stPublishLog('publishing',bp.octopExpertId?'开始刷新已发布 Expert 快照':'Octop Agent 创建成功，开始发布 Expert','info');renderStudio(w);
+            var publishTask=bp.octopExpertId?OCTOP.refreshPublishedExpert(bp.octopExpertId):OCTOP.publishAgentExpert(id,{name:bp.name,description:bp.goal,slug:bp.key,welcome_message:{zh:'你好，我是'+bp.name+'。',en:'Hi, I am '+bp.name+'.'}});
+            return publishTask.then(function(published){
               ST.publish.stage='published';ST.publish.error='';stPublishLog('published','Expert 已发布到 Agent Hub','info');stRecordVersion(bp,'published');bp.octopExpertId=String(published&&(published.id||published.expert_id)||'');
               ECO.publishes.unshift({name:bp.name,kind:'Agent Expert',ver:bp.version,time:fmtT(new Date()),remote:true,id:published&&published.id});
               toast('success','已发布到 Octop Agent Hub','Agent 已创建并生成 Expert 模板');
