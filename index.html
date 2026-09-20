@@ -3632,6 +3632,12 @@ function hubAssetAction(kind,key,action,w){
     var old=r.current;r.current=r.previous;r.previous=old;r.history.push(old);renderHub(w);toast('success','已回滚资产',source.name+' · v'+r.current);
   }
 }
+function hubShowAssetDiff(record,w){
+  var item=record.item,r=record.record,mo=openModal({title:'版本对比 · '+item.name,width:540});
+  var changed=r.current!==r.latest;
+  mo.body.innerHTML='<div style="display:flex;gap:8px;margin-bottom:14px"><span class="ec-tag"><i class="ri-price-tag-3-line"></i>当前 v'+esc(r.current)+'</span><i class="ri-arrow-right-line" style="color:var(--tx3);padding-top:4px"></i><span class="ec-tag" style="color:'+(changed?'var(--accent)':'var(--ok)')+'"><i class="ri-cloud-line"></i>最新 v'+esc(r.latest)+'</span></div><div class="ec-hintbox">'+(changed?'检测到新版本，更新前建议确认依赖和权限变化。':'当前已是最新版本，无需更新。')+'</div><div class="ec-sec" style="padding-left:0">变更摘要</div><div class="kv"><span class="k">资产类型</span><span class="v">'+esc(record.label)+'</span></div><div class="kv"><span class="k">发布方</span><span class="v">'+esc(item.by||item.cat||'Octop Hub')+'</span></div><div class="kv"><span class="k">能力描述</span><span class="v" style="max-width:290px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(item.desc||'—')+'</span></div><div class="ec-sec" style="padding-left:0">安全提示</div><div style="font-size:11px;color:var(--tx3);line-height:1.7"><i class="ri-shield-check-line" style="color:var(--ok)"></i> 更新后仍沿用当前 Agent 的权限确认策略；Plugin / MCP 的授权变更由 Octop 管理。</div>';
+  mo.foot.append(el('<button class="btn">关闭</button>'));mo.foot.querySelector('button').onclick=mo.close;
+}
 function hubInstallAsset(kind,key,done){
   var source=(ECO[kind]||[]).find(function(x){return x.key===key});
   if(source&&source.remoteSkill){
@@ -3741,7 +3747,7 @@ function renderHub(w){
     '<div class="kpi"><div class="l"><i class="ri-links-line"></i>MCP</div><div class="v">'+ECO.installed.mcps.length+'<small>/'+ECO.mcps.length+'</small></div></div></div>'+
     '<div style="display:flex;gap:10px;margin-bottom:16px"><button class="btn" id="hb-upd"><i class="ri-refresh-line"></i>检查更新</button><button class="btn" id="hb-sync"><i class="ri-cloud-line"></i>云端同步配置</button></div>'+
     '<div class="ec-sec" style="padding-left:0">四库资产版本 · '+records.length+'</div>'+
-    (records.length?records.map(function(r){var update=r.record.current!==r.record.latest;return '<div class="hb-pub" style="display:flex;align-items:center;gap:8px"><i class="'+(r.kind==='skills'?'ri-magic-line':r.kind==='plugins'?'ri-plug-line':'ri-links-line')+'"></i><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.item.name)+'</span><span style="font:10px var(--mono);color:var(--tx3)">'+r.label+' · v'+esc(r.record.current)+(update?' → v'+esc(r.record.latest):'')+'</span><button class="btn" data-asset-rollback="'+esc(r.id)+'" style="margin-left:auto;padding:3px 7px" '+(r.record.previous?'':'disabled')+'>回滚</button><button class="btn '+(update?'pri':'')+'" data-asset-update="'+esc(r.id)+'" style="padding:3px 7px">'+(update?'更新':'最新')+'</button></div>'}).join(''):'<div style="font-size:12px;color:var(--tx3);padding:6px 0 12px">暂无已安装的四库资产</div>')+
+    (records.length?records.map(function(r){var update=r.record.current!==r.record.latest;return '<div class="hb-pub" style="display:flex;align-items:center;gap:8px"><i class="'+(r.kind==='skills'?'ri-magic-line':r.kind==='plugins'?'ri-plug-line':'ri-links-line')+'"></i><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.item.name)+'</span><span style="font:10px var(--mono);color:var(--tx3)">'+r.label+' · v'+esc(r.record.current)+(update?' → v'+esc(r.record.latest):'')+'</span><button class="btn" data-asset-diff="'+esc(r.id)+'" style="margin-left:auto;padding:3px 7px">对比</button><button class="btn" data-asset-rollback="'+esc(r.id)+'" style="padding:3px 7px" '+(r.record.previous?'':'disabled')+'>回滚</button><button class="btn '+(update?'pri':'')+'" data-asset-update="'+esc(r.id)+'" style="padding:3px 7px">'+(update?'更新':'最新')+'</button></div>'}).join(''):'<div style="font-size:12px;color:var(--tx3);padding:6px 0 12px">暂无已安装的四库资产</div>')+
     '<div class="ec-sec" style="padding-left:0">我的发布 · '+ECO.publishes.length+'</div>'+
     (ECO.publishes.length?ECO.publishes.map(function(p){return '<div class="hb-pub"><i class="ri-upload-2-line"></i>'+esc(p.name)+'<span style="color:var(--tx3);font-size:11px">'+esc(p.kind)+' · v'+p.ver+'</span><span class="tm">'+p.time+' · 已上架</span></div>'}).join('')
     :'<div style="font-size:12px;color:var(--tx3);padding:6px 0 4px">暂无发布 · 在 Agent Studio 或 Workforce Builder 中「上传 Agent Hub」即可上架</div>');
@@ -3757,6 +3763,7 @@ function renderHub(w){
     if(sb)sb.onclick=function(){toast('success','配置已云端同步','Skill 配置 / 权限清单 / MCP 连接器元数据已同步，Agent 本体仍在本机运行')};
     grid.querySelectorAll('[data-asset-update]').forEach(function(b){b.onclick=function(){var parts=b.dataset.assetUpdate.split(':'),kind=parts[0],key=parts.slice(1).join(':');hubAssetAction(kind,key,'update',w)}});
     grid.querySelectorAll('[data-asset-rollback]').forEach(function(b){b.onclick=function(){var parts=b.dataset.assetRollback.split(':'),kind=parts[0],key=parts.slice(1).join(':');hubAssetAction(kind,key,'rollback',w)}});
+    grid.querySelectorAll('[data-asset-diff]').forEach(function(b){b.onclick=function(){var id=b.dataset.assetDiff,record=records.find(function(x){return x.id===id});if(record)hubShowAssetDiff(record,w)}});
   }
   if(HUB.tab!=='mine')grid.style.display='';
 }
