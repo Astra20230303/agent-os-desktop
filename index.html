@@ -2978,7 +2978,7 @@ var ECO={
    {key:'mc-bridge',name:'desktop-bridge-mcp',desc:'本机程序桥接：与桌面软件窗口级上下文互通。',cat:'本机桥接',ver:'1.2'}
   ],
   installed:{skills:['sk-sum','sk-list'],plugins:[],mcps:[]},
-  publishes:[]
+  publishes:[],assetVersions:{}
 };
 /* ============ Agent Studio ============ */
 var ST_SEED=[
@@ -3612,6 +3612,23 @@ function syncHubInstalled(){
   }).catch(function(){return false});
 }
 function hubIsInst(kind,key){if(ECO.installed[kind].indexOf(key)>=0)return true;var source=(ECO[kind]||[]).find(function(x){return x.key===key});return !!(source&&source.installed)}
+function hubAssetRecords(){
+  var out=[];
+  [['skills','Skill'],['plugins','Plugin'],['mcps','MCP']].forEach(function(pair){(ECO[pair[0]]||[]).forEach(function(x){if(!hubIsInst(pair[0],x.key))return;var id=pair[0]+':'+x.key,r=ECO.assetVersions[id]||(ECO.assetVersions[id]={current:x.ver||'—',latest:x.ver||'—',previous:'',history:[]});r.latest=x.ver||r.latest;out.push({kind:pair[0],label:pair[1],item:x,record:r,id:id})})});
+  return out;
+}
+function hubAssetAction(kind,key,action,w){
+  var source=(ECO[kind]||[]).find(function(x){return x.key===key});if(!source)return;
+  if(action==='update'&&source.remotePlugin||action==='update'&&source.remoteConnector){toast('info','请在 Octop 中更新',source.name+' 的版本与授权由 Octop 管理');return}
+  var id=kind+':'+key,r=ECO.assetVersions[id]||(ECO.assetVersions[id]={current:source.ver||'—',latest:source.ver||'—',previous:'',history:[]});
+  if(action==='update'){
+    var apply=function(){if(r.current===r.latest){toast('info','已是最新版本',source.name+' · v'+r.current);return}r.previous=r.current;r.history.push(r.current);r.current=r.latest;renderHub(w);toast('success','资产已更新',source.name+' · v'+r.current)};
+    if(source.remoteSkill&&window.OCTOP&&OCTOP.token){OCTOP.hubInstall('skill',source).then(apply).catch(function(e){toast('error','更新失败',e.message||'Octop 拒绝了更新')})}else apply();
+  }else if(action==='rollback'){
+    if(!r.previous){toast('info','暂无可回滚版本',source.name+' 还没有版本快照');return}
+    var old=r.current;r.current=r.previous;r.previous=old;r.history.push(old);renderHub(w);toast('success','已回滚资产',source.name+' · v'+r.current);
+  }
+}
 function hubInstallAsset(kind,key,done){
   var source=(ECO[kind]||[]).find(function(x){return x.key===key});
   if(source&&source.remoteSkill){
@@ -3712,6 +3729,7 @@ function renderHub(w){
     }).join(''):'<div class="sp-empty">未找到匹配的 MCP 组件</div>';
   }else{
     var na=0;S.procs.forEach(function(p){if(!p.sys)na++});
+    var records=hubAssetRecords();
     grid.style.display='block';
     grid.innerHTML='<div class="hb-kpis">'+
     '<div class="kpi gd"><div class="l"><i class="ri-robot-2-line"></i>本机 Agent</div><div class="v">'+na+'</div></div>'+
@@ -3719,6 +3737,8 @@ function renderHub(w){
     '<div class="kpi"><div class="l"><i class="ri-plug-line"></i>Plugin</div><div class="v">'+ECO.installed.plugins.length+'<small>/'+ECO.plugins.length+'</small></div></div>'+
     '<div class="kpi"><div class="l"><i class="ri-links-line"></i>MCP</div><div class="v">'+ECO.installed.mcps.length+'<small>/'+ECO.mcps.length+'</small></div></div></div>'+
     '<div style="display:flex;gap:10px;margin-bottom:16px"><button class="btn" id="hb-upd"><i class="ri-refresh-line"></i>检查更新</button><button class="btn" id="hb-sync"><i class="ri-cloud-line"></i>云端同步配置</button></div>'+
+    '<div class="ec-sec" style="padding-left:0">四库资产版本 · '+records.length+'</div>'+
+    (records.length?records.map(function(r){var update=r.record.current!==r.record.latest;return '<div class="hb-pub" style="display:flex;align-items:center;gap:8px"><i class="'+(r.kind==='skills'?'ri-magic-line':r.kind==='plugins'?'ri-plug-line':'ri-links-line')+'"></i><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.item.name)+'</span><span style="font:10px var(--mono);color:var(--tx3)">'+r.label+' · v'+esc(r.record.current)+(update?' → v'+esc(r.record.latest):'')+'</span><button class="btn" data-asset-rollback="'+esc(r.id)+'" style="margin-left:auto;padding:3px 7px" '+(r.record.previous?'':'disabled')+'>回滚</button><button class="btn '+(update?'pri':'')+'" data-asset-update="'+esc(r.id)+'" style="padding:3px 7px">'+(update?'更新':'最新')+'</button></div>'}).join(''):'<div style="font-size:12px;color:var(--tx3);padding:6px 0 12px">暂无已安装的四库资产</div>')+
     '<div class="ec-sec" style="padding-left:0">我的发布 · '+ECO.publishes.length+'</div>'+
     (ECO.publishes.length?ECO.publishes.map(function(p){return '<div class="hb-pub"><i class="ri-upload-2-line"></i>'+esc(p.name)+'<span style="color:var(--tx3);font-size:11px">'+esc(p.kind)+' · v'+p.ver+'</span><span class="tm">'+p.time+' · 已上架</span></div>'}).join('')
     :'<div style="font-size:12px;color:var(--tx3);padding:6px 0 4px">暂无发布 · 在 Agent Studio 或 Workforce Builder 中「上传 Agent Hub」即可上架</div>');
@@ -3732,6 +3752,8 @@ function renderHub(w){
     };
     var sb=grid.querySelector('#hb-sync');
     if(sb)sb.onclick=function(){toast('success','配置已云端同步','Skill 配置 / 权限清单 / MCP 连接器元数据已同步，Agent 本体仍在本机运行')};
+    grid.querySelectorAll('[data-asset-update]').forEach(function(b){b.onclick=function(){var parts=b.dataset.assetUpdate.split(':'),kind=parts[0],key=parts.slice(1).join(':');hubAssetAction(kind,key,'update',w)}});
+    grid.querySelectorAll('[data-asset-rollback]').forEach(function(b){b.onclick=function(){var parts=b.dataset.assetRollback.split(':'),kind=parts[0],key=parts.slice(1).join(':');hubAssetAction(kind,key,'rollback',w)}});
   }
   if(HUB.tab!=='mine')grid.style.display='';
 }
