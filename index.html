@@ -3054,6 +3054,7 @@ var ST={mode:'bp',bp:ST_SEED[0],nodes:[],edges:[],logs:[],steps:[],idx:0,running
 try{ST.projects=JSON.parse(localStorage.getItem('aos.studio.projects')||'null')||JSON.parse(JSON.stringify(ST_SEED))}catch(e){ST.projects=JSON.parse(JSON.stringify(ST_SEED))}
 function stLoadProjectState(p){p=p||{};ST.versions=JSON.parse(JSON.stringify(p.studioVersions||[]));ST.publish=JSON.parse(JSON.stringify(p.studioPublish||{checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]}));ST.testResult=p.studioTestResult||null}
 function stSaveProject(){if(!ST.bp||!ST.projects)return;var snapshot=JSON.parse(JSON.stringify(ST.bp));snapshot.studioVersions=JSON.parse(JSON.stringify(ST.versions||[]));snapshot.studioPublish=JSON.parse(JSON.stringify(ST.publish||{}));snapshot.studioTestResult=ST.testResult||null;var i=ST.projects.findIndex(function(x){return x.key===ST.bp.key});if(i<0){ST.projects.push(snapshot)}else{ST.projects[i]=snapshot}try{localStorage.setItem('aos.studio.projects',JSON.stringify(ST.projects))}catch(e){}}
+if(ST.projects[0]){ST.bp=JSON.parse(JSON.stringify(ST.projects[0]));delete ST.bp.studioVersions;delete ST.bp.studioPublish;delete ST.bp.studioTestResult}
 stLoadProjectState(ST.projects[0]);
 function stAdd(arr,v){if(arr.indexOf(v)<0)arr.push(v);return arr}
 function stParseIntent(t,base){
