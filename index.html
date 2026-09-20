@@ -3051,6 +3051,8 @@ var ST_SEED=[
  {key:'competitor-watch',name:'竞品情报 Agent',version:'0.2.0',goal:'定时监控竞品动态，异常即时预警并输出周简报',workers:4,resident:true,memory:'/Agent-Space/competitor-watch',perms:{file:true,net:true,shell:false,device:false},expert:'竞品情报专家',knowledge:['公司知识库'],skills:['竞品分析','文档摘要'],plugins:[],mcps:['local-file-mcp','cloud-sync-mcp'],triggers:['定时触发','手动启动'],outputs:['情报简报.md','预警推送']}
 ];
 var ST={mode:'bp',bp:ST_SEED[0],nodes:[],edges:[],logs:[],steps:[],idx:0,running:false,paused:false,fused:false,brk:false,tmr:null,deploys:[],proj:0,assetTab:'expert',testResult:null,versions:[],publish:{checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]}};
+try{ST.projects=JSON.parse(localStorage.getItem('aos.studio.projects')||'null')||JSON.parse(JSON.stringify(ST_SEED))}catch(e){ST.projects=JSON.parse(JSON.stringify(ST_SEED))}
+function stSaveProject(){if(!ST.bp||!ST.projects)return;var i=ST.projects.findIndex(function(x){return x.key===ST.bp.key});if(i<0){ST.projects.push(JSON.parse(JSON.stringify(ST.bp)))}else{ST.projects[i]=JSON.parse(JSON.stringify(ST.bp))}try{localStorage.setItem('aos.studio.projects',JSON.stringify(ST.projects))}catch(e){}}
 function stAdd(arr,v){if(arr.indexOf(v)<0)arr.push(v);return arr}
 function stParseIntent(t,base){
   var bp;
@@ -3198,6 +3200,7 @@ function stShowVersionDiff(v,w){var current=ST.bp,diffs=stVersionDiff(v.blueprin
 function stRollbackVersion(v,w){if(!v||!v.blueprint)return;ST.bp=JSON.parse(JSON.stringify(v.blueprint));ST.bp.version=(String(v.version).split('.').map(Number).map(function(n,i){return i===2?(n||0)+1:n||0}).join('.'));ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};stBuildNodes(ST.bp);renderStudio(w);toast('success','已回滚为新草稿','基于 v'+v.version+' 创建 v'+ST.bp.version+'，需要重新测试和发布')}
 function stBumpVersion(w){if(!ST.bp)return;var parts=String(ST.bp.version||'0.1.0').split('.').map(Number);parts[2]=(parts[2]||0)+1;ST.bp.version=parts.join('.');ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};renderStudio(w);toast('success','新版本已创建',ST.bp.name+' · v'+ST.bp.version+'，请重新测试后发布')}
 function renderStudio(w){
+  stSaveProject();
   var q=function(s){return w.el.querySelector(s)};
   Array.prototype.forEach.call(w.el.querySelectorAll('.ec-nav button'),function(b){b.classList.toggle('cur',b.dataset.m===ST.mode)});
   var main=q('#st-main'),right=q('#st-right');
@@ -3465,7 +3468,7 @@ function stNewProject(w){
     bp.key='agent-'+Date.now().toString(36);bp.name=name;bp.goal=goal;bp.version='0.1.0';bp.memory='/Agent-Space/'+bp.key;
     if(kind==='expert'&&ECO.agents&&ECO.agents[0]){bp.expert=ECO.agents[0].name;bp.skills=bp.skills.length?bp.skills:[].concat(ECO.agents[0].skills||[])}
     if(kind==='hub'&&ECO.agents&&ECO.agents[0]){bp.expert=ECO.agents[0].name;bp.knowledge=['项目资料库']}
-    ST.bp=bp;ST.proj=-1;ST.mode='bp';ST.versions=[];ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};ST.testResult=null;stBuildNodes(bp);mo.close();renderStudio(w);toast('success','Agent 项目已创建',name+' · 下一步可配置 Expert 与四库资产');
+    ST.bp=bp;ST.proj=ST.projects.length;ST.mode='bp';ST.versions=[];ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};ST.testResult=null;stBuildNodes(bp);mo.close();renderStudio(w);toast('success','Agent 项目已创建',name+' · 下一步可配置 Expert 与四库资产');
   };
 }
 function buildStudio(w){
@@ -3482,8 +3485,7 @@ function buildStudio(w){
   '<button class="ec-nav" data-m="pub" style="--ec:#8f7bff"><span class="ecdot"><i class="ri-rocket-2-line"></i></span>打包与发布</button>'+
   '</div>'+
   '<div class="ec-sec">项目</div>'+
-  '<button class="ec-nav '+(ST.proj===0?'cur':'')+'" data-proj="0" style="--ec:#8f7bff"><span class="ecdot"><i class="ri-folder-3-line"></i></span>本地文档分析</button>'+
-  '<button class="ec-nav '+(ST.proj===1?'cur':'')+'" data-proj="1" style="--ec:#8f7bff"><span class="ecdot"><i class="ri-folder-3-line"></i></span>竞品情报</button>'+
+  ST.projects.map(function(p,i){return '<button class="ec-nav '+(ST.proj===i?'cur':'')+'" data-proj="'+i+'" style="--ec:#8f7bff"><span class="ecdot"><i class="ri-folder-3-line"></i></span>'+esc(p.name)+'</button>'}).join('')+
   '<button class="ec-nav" data-proj="new" style="--ec:#8f7bff"><span class="ecdot"><i class="ri-add-line"></i></span>新建项目</button>'+
   '</div>'+
   '<div class="ec-main" id="st-main"></div>'+
@@ -3492,7 +3494,7 @@ function buildStudio(w){
     var b=e.target.closest('[data-m]');if(b){ST.mode=b.dataset.m;renderStudio(w);return}
     var p=e.target.closest('[data-proj]');if(!p)return;
     if(p.dataset.proj==='new'){stNewProject(w);return}
-    else{ST.proj=+p.dataset.proj;ST.bp=JSON.parse(JSON.stringify(ST_SEED[ST.proj]));stBuildNodes(ST.bp)}
+    else{ST.proj=+p.dataset.proj;ST.bp=JSON.parse(JSON.stringify(ST.projects[ST.proj]));ST.versions=[];ST.testResult=null;ST.publish={checked:false,checks:[],stage:'draft',review:'not_started',error:'',history:[]};stBuildNodes(ST.bp)}
     renderStudio(w);
   });
   renderStudio(w);
