@@ -1,0 +1,3 @@
+[submodule "vendor/octop"]
+	path = vendor/octop
+	url = git@github.com:TencentCloud/Octop.git

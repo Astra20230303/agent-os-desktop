@@ -9,13 +9,21 @@ npm install
 npm start
 ```
 
+首次克隆需要初始化 Octop 子仓库：
+
+```bash
+git submodule update --init --recursive
+```
+
+Electron 启动时会先检查 `http://127.0.0.1:8088/api/health`；如果 Octop 未运行，会自动从 `vendor/octop` 启动。也可以用 `OCTOP_DIR=/path/to/Octop npm start` 指定本地 Octop 工作区。已运行的 Octop 会直接复用，Electron 退出时只会回收由它自己启动的进程。
+
 窗口默认使用 macOS 隐藏标题栏、隐藏原生红黄绿窗口控制、半透明背景和 1024×640 最小尺寸。使用 `⌘⇧F`（Windows/Linux 为 `Ctrl⇧F`）切换原生全屏。
 
 ## Octop 后端
 
 桌面端已内置 Octop API 适配层，默认探测 `http://127.0.0.1:8088`。接口说明和启动方式见 [OCTOP-INTEGRATION.md](./OCTOP-INTEGRATION.md)。
 
-启动 Octop 后可先运行 `npm run octop:check` 验证健康接口；再运行 `npm start` 打开桌面端。设置 `OCTOP_USERNAME` 与 `OCTOP_PASSWORD` 后，smoke check 还会验证 JWT、Agent 列表和首个 Agent 状态。
+可运行 `npm run octop:check` 验证健康接口、JWT、Agent 列表和首个 Agent 状态；也可以直接 `npm start`，桌面端会负责先启动 Octop。
 
 连接后点击顶部“专家中心”，可以在“我的专家 / 内置模板 / 专家市场”之间切换，查看能力和快速指令，并将模板创建或安装为桌面 Agent；完成后会自动同步图标并打开工作台。
 
