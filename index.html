@@ -3047,6 +3047,14 @@ var ECO={
 };
 try{ECO.submissions=JSON.parse(localStorage.getItem('aos.eco.submissions')||'[]')}catch(e){ECO.submissions=[]}
 function hubSaveSubmissions(){try{localStorage.setItem('aos.eco.submissions',JSON.stringify(ECO.submissions||[]))}catch(e){}}
+function hubPublishSubmission(s){
+  var key='submitted-'+s.id, base={key:key,name:s.name,desc:s.description,ver:s.version,author:'本机 · 我',mine:true,submissionId:s.id,rating:'—',dl:'0',size:'本地'};
+  if(s.kind==='agent'){ECO.agents=ECO.agents.filter(function(x){return x.submissionId!==s.id});ECO.agents.unshift(Object.assign({type:'Agent',color:'#8f7bff',icon:'ri-robot-2-line',perms:[['按 Manifest 声明',1]]},base))}
+  else if(s.kind==='skill'){ECO.skills=ECO.skills.filter(function(x){return x.submissionId!==s.id});ECO.skills.unshift(Object.assign({by:'本机 · 我'},base))}
+  else if(s.kind==='plugin'){ECO.plugins=ECO.plugins.filter(function(x){return x.submissionId!==s.id});ECO.plugins.unshift(Object.assign({cat:'本机插件'},base))}
+  else if(s.kind==='mcp'){ECO.mcps=ECO.mcps.filter(function(x){return x.submissionId!==s.id});ECO.mcps.unshift(Object.assign({cat:'本机 MCP',connectorKind:s.name},base))}
+  ECO.publishes=ECO.publishes.filter(function(x){return x.submissionId!==s.id});ECO.publishes.unshift({name:s.name,kind:s.kind.toUpperCase(),ver:s.version,time:s.reviewedAt||fmtT(new Date()),submissionId:s.id,status:'published'});
+}
 /* ============ Agent Studio ============ */
 var ST_SEED=[
  {key:'doc-analyst',name:'本地文档分析 Agent',version:'0.3.0',goal:'读取本机工作目录文档，提炼要点并自动生成周报',workers:3,resident:true,memory:'/Agent-Space/doc-analyst',perms:{file:true,net:false,shell:false,device:false},expert:'文档分析专家',knowledge:['项目资料库'],skills:['文档摘要','清单生成'],plugins:['PDF 解析'],mcps:['local-file-mcp'],triggers:['手动启动'],outputs:['生成周报.md']},
@@ -3874,7 +3882,7 @@ function renderHub(w){
     (ECO.publishes.length?ECO.publishes.map(function(p){return '<div class="hb-pub"><i class="ri-upload-2-line"></i>'+esc(p.name)+'<span style="color:var(--tx3);font-size:11px">'+esc(p.kind)+' · v'+p.ver+'</span><span class="tm">'+p.time+' · 已上架</span></div>'}).join('')
     :'<div style="font-size:12px;color:var(--tx3);padding:6px 0 4px">暂无发布 · 在 Agent Studio 或 Workforce Builder 中「上传 Agent Hub」即可上架</div>')+
     '<div class="ec-sec" style="padding-left:0;margin-top:16px">组件审核队列 · '+ECO.submissions.length+'</div>'+
-    (ECO.submissions.length?ECO.submissions.map(function(s){var color=s.status==='approved'?'var(--ok)':s.status==='rejected'?'var(--err)':'var(--warn)';return '<div class="hb-pub" style="display:flex;align-items:center;gap:8px"><i class="ri-file-upload-line"></i><span>'+esc(s.name)+'</span><span style="color:var(--tx3);font-size:11px">'+esc(s.kind.toUpperCase())+' · v'+esc(s.version)+'</span><span class="tm" style="color:'+color+'">'+({review_pending:'审核中',approved:'已通过',rejected:'已驳回'}[s.status]||s.status)+' · '+esc(s.createdAt)+'</span>'+(s.status==='review_pending'?'<button class="btn" data-sub-action="approve" data-sub-id="'+esc(s.id)+'" style="margin-left:auto;padding:3px 7px;color:var(--ok)">通过</button><button class="btn" data-sub-action="reject" data-sub-id="'+esc(s.id)+'" style="padding:3px 7px;color:var(--err)">驳回</button>':'')+'</div>'}).join(''):'<div style="font-size:12px;color:var(--tx3);padding:6px 0 4px">暂无组件提交</div>');
+    (ECO.submissions.length?ECO.submissions.map(function(s){var color=s.status==='approved'?'var(--ok)':s.status==='rejected'?'var(--err)':'var(--warn)';return '<div class="hb-pub" style="display:flex;align-items:center;gap:8px"><i class="ri-file-upload-line"></i><span>'+esc(s.name)+'</span><span style="color:var(--tx3);font-size:11px">'+esc(s.kind.toUpperCase())+' · v'+esc(s.version)+'</span><span class="tm" style="color:'+color+'">'+({review_pending:'审核中',approved:'已通过 · 已上架',rejected:'已驳回'}[s.status]||s.status)+' · '+esc(s.createdAt)+'</span>'+(s.status==='review_pending'?'<button class="btn" data-sub-action="approve" data-sub-id="'+esc(s.id)+'" style="margin-left:auto;padding:3px 7px;color:var(--ok)">通过</button><button class="btn" data-sub-action="reject" data-sub-id="'+esc(s.id)+'" style="padding:3px 7px;color:var(--err)">驳回</button>':'')+'</div>'}).join(''):'<div style="font-size:12px;color:var(--tx3);padding:6px 0 4px">暂无组件提交</div>');
     var ub=grid.querySelector('#hb-upd');
     if(ub)ub.onclick=function(){
       toast('info','正在检查云端版本…','元数据比对中');
@@ -3887,7 +3895,7 @@ function renderHub(w){
     if(sb)sb.onclick=function(){toast('success','配置已云端同步','Skill 配置 / 权限清单 / MCP 连接器元数据已同步，Agent 本体仍在本机运行')};
     var submit=grid.querySelector('#hb-submit');
     if(submit)submit.onclick=function(){hubSubmitAsset(w)};
-    grid.querySelectorAll('[data-sub-action]').forEach(function(b){b.onclick=function(){var item=ECO.submissions.find(function(x){return x.id===b.dataset.subId});if(!item)return;item.status=b.dataset.subAction==='approve'?'approved':'rejected';item.reviewedAt=fmtT(new Date());item.reviewHistory=item.reviewHistory||[];item.reviewHistory.push({status:item.status,time:item.reviewedAt});hubSaveSubmissions();renderHub(w);toast(item.status==='approved'?'success':'warn',item.status==='approved'?'组件审核通过':'组件已驳回',item.name+' · v'+item.version)}});
+    grid.querySelectorAll('[data-sub-action]').forEach(function(b){b.onclick=function(){var item=ECO.submissions.find(function(x){return x.id===b.dataset.subId});if(!item)return;item.status=b.dataset.subAction==='approve'?'approved':'rejected';item.reviewedAt=fmtT(new Date());item.reviewHistory=item.reviewHistory||[];item.reviewHistory.push({status:item.status,time:item.reviewedAt});if(item.status==='approved'){item.publishedAt=item.reviewedAt;hubPublishSubmission(item)}hubSaveSubmissions();renderHub(w);toast(item.status==='approved'?'success':'warn',item.status==='approved'?'组件审核通过并已上架':'组件已驳回',item.name+' · v'+item.version)}});
     grid.querySelectorAll('[data-asset-update]').forEach(function(b){b.onclick=function(){var parts=b.dataset.assetUpdate.split(':'),kind=parts[0],key=parts.slice(1).join(':');hubAssetAction(kind,key,'update',w)}});
     grid.querySelectorAll('[data-asset-rollback]').forEach(function(b){b.onclick=function(){var parts=b.dataset.assetRollback.split(':'),kind=parts[0],key=parts.slice(1).join(':');hubAssetAction(kind,key,'rollback',w)}});
     grid.querySelectorAll('[data-asset-diff]').forEach(function(b){b.onclick=function(){var id=b.dataset.assetDiff,record=records.find(function(x){return x.id===id});if(record)hubShowAssetDiff(record,w)}});
